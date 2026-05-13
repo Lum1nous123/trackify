@@ -1,0 +1,348 @@
+
+<style>
+  .ms-card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); margin-bottom: 16px; overflow: hidden; }
+  .ms-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; user-select: none; }
+  .ms-header:hover { background: var(--color-background-secondary); }
+  .ms-badge { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+  .ms-title-block { flex: 1; }
+  .ms-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+  .ms-meta { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+  .ms-chevron { font-size: 12px; color: var(--color-text-tertiary); transition: transform .2s; }
+  .ms-chevron.open { transform: rotate(180deg); }
+  .ms-body { padding: 0 18px 16px; display: none; }
+  .ms-body.open { display: block; }
+  .ms-section { margin-top: 12px; }
+  .ms-section-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-tertiary); margin-bottom: 6px; }
+  .ms-tasks { list-style: none; padding: 0; margin: 0; }
+  .ms-tasks li { font-size: 13px; color: var(--color-text-secondary); padding: 3px 0; padding-left: 18px; position: relative; line-height: 1.5; }
+  .ms-tasks li::before { content: "·"; position: absolute; left: 6px; color: var(--color-text-tertiary); }
+  .ms-done { background: var(--color-background-success); border: 0.5px solid var(--color-border-success); border-radius: 8px; padding: 8px 12px; font-size: 13px; color: var(--color-text-success); margin-top: 10px; }
+  .ms-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .ms-chip { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+  .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 10px 0; }
+  /* color variants */
+  .b1 { background: #E6F1FB; color: #0C447C; }
+  .b2 { background: #E1F5EE; color: #085041; }
+  .b3 { background: #FAEEDA; color: #633806; }
+  .b4 { background: #EEEDFE; color: #3C3489; }
+  .b5 { background: #EAF3DE; color: #27500A; }
+  .b6 { background: #F1EFE8; color: #444441; }
+  .badge1 { background: #E6F1FB; color: #0C447C; }
+  .badge2 { background: #E1F5EE; color: #085041; }
+  .badge3 { background: #FAEEDA; color: #633806; }
+  .badge4 { background: #EEEDFE; color: #3C3489; }
+  .badge5 { background: #EAF3DE; color: #27500A; }
+  .badge6 { background: #F1EFE8; color: #444441; }
+  @media (prefers-color-scheme: dark) {
+    .b1 { background: #0C447C; color: #B5D4F4; }
+    .b2 { background: #085041; color: #9FE1CB; }
+    .b3 { background: #633806; color: #FAC775; }
+    .b4 { background: #3C3489; color: #CECBF6; }
+    .b5 { background: #27500A; color: #C0DD97; }
+    .b6 { background: #444441; color: #D3D1C7; }
+    .badge1 { background: #042C53; color: #85B7EB; }
+    .badge2 { background: #04342C; color: #5DCAA5; }
+    .badge3 { background: #412402; color: #EF9F27; }
+    .badge4 { background: #26215C; color: #AFA9EC; }
+    .badge5 { background: #173404; color: #97C459; }
+    .badge6 { background: #2C2C2A; color: #B4B2A9; }
+  }
+  .progress-bar { height: 4px; border-radius: 2px; background: var(--color-border-tertiary); margin-bottom: 18px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, #378ADD, #1D9E75); width: 0%; transition: width 1s ease; }
+  .summary-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .summary-pill { flex: 1; min-width: 100px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: 10px; padding: 10px 12px; text-align: center; }
+  .summary-num { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+  .summary-lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+</style>
+
+<div style="padding: 16px 0 0">
+  <h2 class="sr-only">AI Job Application Tracker — Lộ trình 6 Milestone</h2>
+
+  <div class="summary-row">
+    <div class="summary-pill"><div class="summary-num">~20</div><div class="summary-lbl">ngày tổng</div></div>
+    <div class="summary-pill"><div class="summary-num">6</div><div class="summary-lbl">milestones</div></div>
+    <div class="summary-pill"><div class="summary-num">0</div><div class="summary-lbl">Kafka 😄</div></div>
+    <div class="summary-pill"><div class="summary-num">1</div><div class="summary-lbl">link public</div></div>
+  </div>
+
+  <!-- M1 -->
+  <div class="ms-card">
+    <div class="ms-header" onclick="toggle(this)">
+      <div class="ms-badge b1">M1</div>
+      <div class="ms-title-block">
+        <div class="ms-title">Foundation &amp; Auth</div>
+        <div class="ms-meta">3–4 ngày · Spring Security + JWT + Next.js Login</div>
+      </div>
+      <span class="ms-chevron">▼</span>
+    </div>
+    <div class="ms-body">
+      <div class="ms-section">
+        <div class="ms-section-label">Backend</div>
+        <ul class="ms-tasks">
+          <li>Khởi tạo Spring Boot project: Web, JPA, Security, PostgreSQL, Lombok, Validation</li>
+          <li>Entity <code>User</code>: id (UUID), email, passwordHash, createdAt</li>
+          <li>JWT filter chain: <code>UsernamePasswordAuthenticationFilter</code> → issue token, <code>OncePerRequestFilter</code> → validate</li>
+          <li>Endpoints: <code>POST /auth/register</code>, <code>POST /auth/login</code>, <code>GET /auth/me</code> (protected)</li>
+          <li>Docker Compose: PostgreSQL 16 + pgAdmin (optional)</li>
+          <li><strong>Lưu ý:</strong> hash password bằng BCrypt, <em>không</em> plain text</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">Frontend</div>
+        <ul class="ms-tasks">
+          <li>Setup Next.js 14 + TypeScript + Tailwind + shadcn/ui</li>
+          <li>Trang <code>/login</code> và <code>/register</code> — gọi API, lưu JWT vào <code>httpOnly cookie</code> hoặc <code>localStorage</code></li>
+          <li>Middleware Next.js: redirect nếu chưa login</li>
+          <li>Axios instance với interceptor tự gắn <code>Authorization: Bearer ...</code></li>
+        </ul>
+      </div>
+      <div class="ms-done">✅ Done khi: đăng ký → đăng nhập → nhận JWT → gọi <code>/auth/me</code> trả về thông tin user</div>
+      <div class="ms-tech">
+        <span class="ms-chip badge1">Spring Security</span>
+        <span class="ms-chip badge1">JWT (jjwt)</span>
+        <span class="ms-chip badge1">PostgreSQL</span>
+        <span class="ms-chip badge1">Next.js 14</span>
+        <span class="ms-chip badge1">Docker Compose</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- M2 -->
+  <div class="ms-card">
+    <div class="ms-header" onclick="toggle(this)">
+      <div class="ms-badge b2">M2</div>
+      <div class="ms-title-block">
+        <div class="ms-title">Job CRUD + Kanban Board</div>
+        <div class="ms-meta">4–5 ngày · Kéo thả pipeline, data persist</div>
+      </div>
+      <span class="ms-chevron">▼</span>
+    </div>
+    <div class="ms-body">
+      <div class="ms-section">
+        <div class="ms-section-label">Backend</div>
+        <ul class="ms-tasks">
+          <li>Entity <code>Job</code>: id, userId (FK), title, company, logoUrl, status, url, notes, deadline, matchScore, createdAt, updatedAt</li>
+          <li>Enum <code>JobStatus</code>: SAVED → APPLIED → INTERVIEW → OFFER → REJECTED</li>
+          <li>CRUD endpoints: <code>POST /jobs</code>, <code>GET /jobs</code>, <code>PUT /jobs/{id}</code>, <code>DELETE /jobs/{id}</code></li>
+          <li>Endpoint riêng: <code>PATCH /jobs/{id}/status</code> — dùng cho kéo thả Kanban</li>
+          <li>Validation: deadline không được ở quá khứ, title không rỗng</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">Frontend</div>
+        <ul class="ms-tasks">
+          <li>Kanban board dùng <code>@dnd-kit/core</code> — 5 cột tương ứng 5 status</li>
+          <li>Job card hiện: logo công ty (Clearbit API free), tên vị trí, match%, deadline badge đổi màu khi gần</li>
+          <li>Drag end → gọi <code>PATCH /jobs/{id}/status</code> → optimistic update UI</li>
+          <li>Modal tạo/sửa job với form validation (react-hook-form + zod)</li>
+        </ul>
+      </div>
+      <div class="ms-done">✅ Done khi: tạo job → kéo sang cột khác → refresh trang → vẫn đúng cột</div>
+      <div class="ms-tech">
+        <span class="ms-chip badge2">@dnd-kit/core</span>
+        <span class="ms-chip badge2">react-hook-form</span>
+        <span class="ms-chip badge2">zod</span>
+        <span class="ms-chip badge2">Clearbit API</span>
+        <span class="ms-chip badge2">JPA / Hibernate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- M3 -->
+  <div class="ms-card">
+    <div class="ms-header" onclick="toggle(this)">
+      <div class="ms-badge b3">M3</div>
+      <div class="ms-title-block">
+        <div class="ms-title">Scraper + AI Analyzer</div>
+        <div class="ms-meta">5–6 ngày · Phần core nhất của project</div>
+      </div>
+      <span class="ms-chevron">▼</span>
+    </div>
+    <div class="ms-body">
+      <div class="ms-section">
+        <div class="ms-section-label">CV Upload (thêm vào M1 hoặc làm đầu M3)</div>
+        <ul class="ms-tasks">
+          <li>Entity <code>CV</code>: id, userId (FK), fileName, rawText, uploadedAt, isActive</li>
+          <li>Dùng <strong>Apache PDFBox</strong> parse PDF → extract text → lưu vào <code>cv.rawText</code></li>
+          <li>Lưu file gốc: MinIO (self-hosted, free) hoặc đơn giản hơn là <strong>lưu thẳng DB</strong> dạng BYTEA</li>
+          <li>Endpoint: <code>POST /cv/upload</code> (multipart), <code>GET /cv/active</code></li>
+          <li><em>User chỉ có 1 CV active tại một thời điểm</em> — logic: upload mới thì set isActive cũ = false</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">Scraper</div>
+        <ul class="ms-tasks">
+          <li>Dùng <strong>Jsoup</strong> fetch HTML từ link JD</li>
+          <li>Ưu tiên ITviec trước (HTML ổn định, dễ parse). Selector ví dụ: <code>.job-details__content</code></li>
+          <li>Fallback: nếu scrape thất bại, user tự điền tay vào form</li>
+          <li>Trả về: title, company, description, requirements (dạng text thuần)</li>
+          <li><strong>Cẩn thận:</strong> LinkedIn block scraping — bỏ qua hoặc dùng paste thủ công</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">AI Service</div>
+        <ul class="ms-tasks">
+          <li>Gọi <strong>OpenAI GPT-4o mini</strong> (rẻ, đủ dùng) hoặc Gemini Flash (có free tier)</li>
+          <li>Prompt template: so sánh <code>cv.rawText</code> với JD, trả về JSON: <code>matchScore</code>, <code>missingSkills[]</code>, <code>suggestedKeywords[]</code>, <code>summary</code></li>
+          <li>Cache kết quả vào Redis với key = <code>hash(cvText + jdText)</code>, TTL 24h — tránh gọi API lại</li>
+          <li>Lưu kết quả vào <code>job.matchScore</code> + bảng <code>ai_analysis</code></li>
+        </ul>
+      </div>
+      <div class="ms-done">✅ Done khi: paste link JD → scrape → AI chạy → hiện match%, skills thiếu trong job detail panel</div>
+      <div class="ms-tech">
+        <span class="ms-chip badge3">Jsoup</span>
+        <span class="ms-chip badge3">Apache PDFBox</span>
+        <span class="ms-chip badge3">OpenAI API</span>
+        <span class="ms-chip badge3">Redis</span>
+        <span class="ms-chip badge3">Spring Cache</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- M4 -->
+  <div class="ms-card">
+    <div class="ms-header" onclick="toggle(this)">
+      <div class="ms-badge b4">M4</div>
+      <div class="ms-title-block">
+        <div class="ms-title">Email Reminder (không có Kafka)</div>
+        <div class="ms-meta">2–3 ngày · @Scheduled + JavaMailSender</div>
+      </div>
+      <span class="ms-chevron">▼</span>
+    </div>
+    <div class="ms-body">
+      <div class="ms-section">
+        <div class="ms-section-label">Tại sao không cần Kafka?</div>
+        <ul class="ms-tasks">
+          <li>Monolith = 1 process → không cần message broker để giao tiếp giữa services</li>
+          <li><code>@Scheduled</code> chạy trong cùng JVM, đủ mạnh cho use case này</li>
+          <li>Kafka chỉ cần khi: nhiều microservice, cần replay event, traffic cực cao</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">Implementation</div>
+        <ul class="ms-tasks">
+          <li>Thêm <code>@EnableScheduling</code> vào main class</li>
+          <li>Class <code>ReminderScheduler</code> với 2 jobs:</li>
+          <li>&nbsp;&nbsp;→ Chạy mỗi ngày 8h sáng: query job có <code>deadline &lt; now + 24h AND status != REJECTED</code> → gửi email</li>
+          <li>&nbsp;&nbsp;→ Chạy mỗi ngày 9h sáng: query job có <code>status = APPLIED AND updatedAt &lt; now - 14 days</code> → gửi email nhắc follow-up</li>
+          <li>Gmail SMTP free: <code>spring.mail.host=smtp.gmail.com</code>, port 587, bật App Password</li>
+          <li>Email template HTML đơn giản (Thymeleaf hoặc string thuần)</li>
+          <li>Thêm cột <code>job.lastReminderSentAt</code> để tránh gửi email trùng lặp</li>
+        </ul>
+      </div>
+      <div class="ms-done">✅ Done khi: job gần deadline → nhận email nhắc đúng giờ, không bị gửi lặp</div>
+      <div class="ms-tech">
+        <span class="ms-chip badge4">@Scheduled</span>
+        <span class="ms-chip badge4">JavaMailSender</span>
+        <span class="ms-chip badge4">Gmail SMTP</span>
+        <span class="ms-chip badge4">Thymeleaf</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- M5 -->
+  <div class="ms-card">
+    <div class="ms-header" onclick="toggle(this)">
+      <div class="ms-badge b5">M5</div>
+      <div class="ms-title-block">
+        <div class="ms-title">Analytics Dashboard</div>
+        <div class="ms-meta">3–4 ngày · Recharts + aggregate queries</div>
+      </div>
+      <span class="ms-chevron">▼</span>
+    </div>
+    <div class="ms-body">
+      <div class="ms-section">
+        <div class="ms-section-label">Backend — Analytics API</div>
+        <ul class="ms-tasks">
+          <li><code>GET /analytics/summary</code>: tổng job, tỉ lệ offer/applied, avg match score</li>
+          <li><code>GET /analytics/funnel</code>: số lượng job ở mỗi stage (cho funnel chart)</li>
+          <li><code>GET /analytics/weekly</code>: jobs applied theo từng tuần (7 tuần gần nhất)</li>
+          <li><code>GET /analytics/skills</code>: top 10 skills hay thiếu nhất (aggregate từ bảng ai_analysis)</li>
+          <li>Dùng JPQL aggregate query thay vì tính ở Java → nhanh hơn</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">Frontend</div>
+        <ul class="ms-tasks">
+          <li>Funnel chart pipeline (Saved → Offer) — dùng <code>FunnelChart</code> của Recharts hoặc tự vẽ SVG</li>
+          <li>Line chart: jobs apply theo tuần — <code>LineChart</code> Recharts</li>
+          <li>Bar chart ngang: top skills thiếu — <code>BarChart</code> horizontal</li>
+          <li>Summary cards: tổng apply, response rate, avg match score</li>
+        </ul>
+      </div>
+      <div class="ms-done">✅ Done khi: dashboard hiện số liệu thực từ jobs đã tạo, charts update khi thêm job mới</div>
+      <div class="ms-tech">
+        <span class="ms-chip badge5">Recharts</span>
+        <span class="ms-chip badge5">JPQL</span>
+        <span class="ms-chip badge5">@Query</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- M6 -->
+  <div class="ms-card">
+    <div class="ms-header" onclick="toggle(this)">
+      <div class="ms-badge b6">M6</div>
+      <div class="ms-title-block">
+        <div class="ms-title">Docker + Deploy</div>
+        <div class="ms-meta">2–3 ngày · 1 lệnh chạy được, có link public</div>
+      </div>
+      <span class="ms-chevron">▼</span>
+    </div>
+    <div class="ms-body">
+      <div class="ms-section">
+        <div class="ms-section-label">Docker Compose (local + prod)</div>
+        <ul class="ms-tasks">
+          <li>Services: <code>backend</code> (Spring Boot JAR), <code>frontend</code> (Next.js), <code>postgres</code>, <code>redis</code></li>
+          <li>Không có Kafka → file docker-compose.yml gọn hơn nhiều</li>
+          <li>Dùng <code>.env</code> file cho secrets: DB password, JWT secret, OpenAI key, Gmail password</li>
+          <li>Health check cho postgres trước khi backend start</li>
+          <li>Multi-stage Dockerfile cho backend: build JAR ở stage 1, chạy ở stage 2 (image nhỏ hơn)</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">Deploy (chọn 1)</div>
+        <ul class="ms-tasks">
+          <li><strong>Railway</strong> (khuyến nghị): free tier ổn, deploy bằng git push, có managed PostgreSQL và Redis</li>
+          <li><strong>Render</strong>: tương tự Railway, free tier có spin-down sau 15 phút idle</li>
+          <li><strong>VPS (rẻ nhất)</strong>: Vultr/DigitalOcean $4/tháng, tự cài Docker, full control</li>
+        </ul>
+      </div>
+      <div class="divider"></div>
+      <div class="ms-section">
+        <div class="ms-section-label">README xịn (quan trọng cho portfolio)</div>
+        <ul class="ms-tasks">
+          <li>Demo GIF/video ngắn 30s ở đầu README</li>
+          <li>Tech stack badges, architecture diagram</li>
+          <li>Hướng dẫn chạy local: clone → cp .env.example .env → docker compose up</li>
+          <li>Link demo public + tài khoản test sẵn</li>
+        </ul>
+      </div>
+      <div class="ms-done">✅ Done khi: <code>docker compose up</code> chạy được, có link public hoạt động</div>
+      <div class="ms-tech">
+        <span class="ms-chip badge6">Docker</span>
+        <span class="ms-chip badge6">Railway</span>
+        <span class="ms-chip badge6">Multi-stage build</span>
+        <span class="ms-chip badge6">.env secrets</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.ms-chevron');
+  body.classList.toggle('open');
+  chevron.classList.toggle('open');
+}
+// Auto-open M1
+document.querySelector('.ms-header').click();
+</script>

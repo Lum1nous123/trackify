@@ -1,0 +1,174 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-mono,monospace)}
+.wrap{padding:16px 0;font-size:13px;line-height:1.6}
+.tree{display:flex;flex-direction:column;gap:0}
+.row{display:flex;align-items:baseline;gap:0;cursor:pointer;border-radius:6px;padding:1px 4px;transition:background .12s}
+.row:hover{background:var(--color-background-secondary)}
+.indent{white-space:pre;color:var(--color-border-secondary);font-size:12px;user-select:none;flex-shrink:0}
+.icon{margin-right:5px;font-size:13px;flex-shrink:0}
+.name{color:var(--color-text-primary);font-weight:500;white-space:nowrap}
+.name.pkg{color:#185FA5}
+.name.file{color:var(--color-text-secondary);font-weight:400}
+.name.config{color:#854F0B}
+.name.test{color:#3B6D11}
+.badge{margin-left:8px;font-size:10px;padding:1px 6px;border-radius:10px;font-family:var(--font-sans);font-weight:500;white-space:nowrap;flex-shrink:0}
+.b-m1{background:#E6F1FB;color:#0C447C}
+.b-m2{background:#E1F5EE;color:#085041}
+.b-m3{background:#FAEEDA;color:#633806}
+.b-m4{background:#EEEDFE;color:#3C3489}
+.b-m5{background:#EAF3DE;color:#27500A}
+.b-m6{background:#F1EFE8;color:#444441}
+.desc{margin-left:auto;font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-sans);white-space:nowrap;padding-left:12px;flex-shrink:0}
+.section-label{font-size:11px;font-weight:500;color:var(--color-text-tertiary);font-family:var(--font-sans);text-transform:uppercase;letter-spacing:.07em;padding:10px 4px 4px;user-select:none}
+.divider{height:0.5px;background:var(--color-border-tertiary);margin:6px 0}
+.tooltip{display:none;position:absolute;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--color-text-secondary);font-family:var(--font-sans);max-width:280px;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.08);pointer-events:none;line-height:1.5}
+.tooltip.show{display:block}
+@media (prefers-color-scheme:dark){
+  .b-m1{background:#042C53;color:#85B7EB}
+  .b-m2{background:#04342C;color:#5DCAA5}
+  .b-m3{background:#412402;color:#EF9F27}
+  .b-m4{background:#26215C;color:#AFA9EC}
+  .b-m5{background:#173404;color:#97C459}
+  .b-m6{background:#2C2C2A;color:#B4B2A9}
+  .name.pkg{color:#85B7EB}
+  .name.config{color:#FAC775}
+  .name.test{color:#97C459}
+}
+</style>
+
+<div class="wrap">
+<h2 class="sr-only">JobLens — Spring Boot directory structure</h2>
+<div id="tooltip" class="tooltip"></div>
+
+<div class="section-label">src/main/java/com/joblens</div>
+<div class="tree" id="tree"></div>
+<div class="divider"></div>
+<div class="section-label">src/main/resources &amp; test</div>
+<div class="tree" id="tree2"></div>
+<div class="divider"></div>
+<div class="section-label">root</div>
+<div class="tree" id="tree3"></div>
+</div>
+
+<script>
+const nodes = [
+  {d:0, icon:'i', name:'JobLensApplication.java', cls:'file', desc:'@SpringBootApplication', tip:'Entry point. @EnableScheduling cũng đặt ở đây.'},
+  {d:0, icon:'f', name:'config/', cls:'pkg', badge:'M1', bc:'b-m1'},
+  {d:1, icon:'i', name:'SecurityConfig.java', cls:'file', desc:'JWT filter chain', tip:'Cấu hình Spring Security: whitelist /auth/**, filter chain, CORS.'},
+  {d:1, icon:'i', name:'JwtConfig.java', cls:'file', desc:'secret, expiry', tip:'@ConfigurationProperties đọc jwt.secret và jwt.expiration từ application.yml.'},
+  {d:1, icon:'i', name:'RedisConfig.java', cls:'file', desc:'CacheManager', tip:'Cấu hình Redis CacheManager cho @Cacheable trong AIService.', badge:'M3', bc:'b-m3'},
+  {d:1, icon:'i', name:'OpenApiConfig.java', cls:'file', desc:'Swagger UI', tip:'Springdoc OpenAPI — tự sinh /swagger-ui.html, tiện test API.'},
+  {d:0, icon:'f', name:'domain/', cls:'pkg'},
+  {d:1, icon:'f', name:'user/', cls:'pkg', badge:'M1', bc:'b-m1'},
+  {d:2, icon:'i', name:'User.java', cls:'file', desc:'@Entity', tip:'id (UUID), email, passwordHash, createdAt. Quan hệ @OneToMany với Job và CV.'},
+  {d:2, icon:'i', name:'UserRepository.java', cls:'file', desc:'JpaRepository', tip:'findByEmail() dùng cho login.'},
+  {d:1, icon:'f', name:'job/', cls:'pkg', badge:'M2', bc:'b-m2'},
+  {d:2, icon:'i', name:'Job.java', cls:'file', desc:'@Entity', tip:'id, userId, title, company, logoUrl, status (enum), url, notes, deadline, matchScore, lastReminderSentAt, createdAt, updatedAt.'},
+  {d:2, icon:'i', name:'JobStatus.java', cls:'file', desc:'enum', tip:'SAVED, APPLIED, INTERVIEW, OFFER, REJECTED.'},
+  {d:2, icon:'i', name:'JobRepository.java', cls:'file', desc:'JpaRepository', tip:'findAllByUserIdOrderByCreatedAtDesc(), findJobsNearDeadline(), findStalledJobs() — dùng cho @Scheduled reminder.'},
+  {d:1, icon:'f', name:'cv/', cls:'pkg', badge:'M3', bc:'b-m3'},
+  {d:2, icon:'i', name:'CV.java', cls:'file', desc:'@Entity', tip:'id, userId (FK), fileName, rawText (TEXT), isActive, uploadedAt.'},
+  {d:2, icon:'i', name:'CVRepository.java', cls:'file', desc:'JpaRepository', tip:'findByUserIdAndIsActiveTrue() để lấy CV đang dùng.'},
+  {d:1, icon:'f', name:'analysis/', cls:'pkg', badge:'M3', bc:'b-m3'},
+  {d:2, icon:'i', name:'AiAnalysis.java', cls:'file', desc:'@Entity', tip:'id, jobId (FK), matchScore, missingSkills (JSON), suggestedKeywords (JSON), summary, createdAt.'},
+  {d:2, icon:'i', name:'AiAnalysisRepository.java', cls:'file', desc:'JpaRepository', tip:'findByJobId() — load kết quả AI đã cache vào DB.'},
+  {d:0, icon:'f', name:'service/', cls:'pkg'},
+  {d:1, icon:'i', name:'AuthService.java', cls:'file', desc:'register, login', badge:'M1', bc:'b-m1', tip:'BCrypt hash password, issue JWT. Dùng UserDetailsService cho Spring Security.'},
+  {d:1, icon:'i', name:'JwtService.java', cls:'file', desc:'generate, validate', badge:'M1', bc:'b-m1', tip:'Dùng jjwt library. generateToken(user), validateToken(token), extractUsername(token).'},
+  {d:1, icon:'i', name:'JobService.java', cls:'file', desc:'CRUD + status update', badge:'M2', bc:'b-m2', tip:'createJob, updateJob, deleteJob, changeStatus. Sau khi tạo job → gọi async AIService.analyze().'},
+  {d:1, icon:'i', name:'CVService.java', cls:'file', desc:'upload, parse PDF', badge:'M3', bc:'b-m3', tip:'Dùng Apache PDFBox extract text từ PDF. Set isActive=false cho CV cũ trước khi lưu CV mới.'},
+  {d:1, icon:'i', name:'ScraperService.java', cls:'file', desc:'Jsoup fetch JD', badge:'M3', bc:'b-m3', tip:'fetchJobDetail(url) → trả về ScrapedJob DTO. Bắt exception nếu site block, trả về null để frontend fallback sang form nhập tay.'},
+  {d:1, icon:'i', name:'AIService.java', cls:'file', desc:'OpenAI + cache', badge:'M3', bc:'b-m3', tip:'@Cacheable(key="#cvHash + #jdHash"). Gọi OpenAI GPT-4o-mini, parse JSON response về AiResultDTO.'},
+  {d:1, icon:'i', name:'ReminderService.java', cls:'file', desc:'query + send email', badge:'M4', bc:'b-m4', tip:'Được gọi bởi ReminderScheduler. sendDeadlineReminder(job) và sendFollowUpReminder(job), cập nhật lastReminderSentAt.'},
+  {d:1, icon:'i', name:'AnalyticsService.java', cls:'file', desc:'aggregate queries', badge:'M5', bc:'b-m5', tip:'getFunnelData(), getWeeklyStats(), getTopMissingSkills(). Dùng JPQL @Query trên repository thay vì tính ở Java.'},
+  {d:0, icon:'f', name:'scheduler/', cls:'pkg', badge:'M4', bc:'b-m4'},
+  {d:1, icon:'i', name:'ReminderScheduler.java', cls:'file', desc:'@Scheduled jobs', tip:'@Scheduled(cron="0 0 8 * * *") checkDeadlines() và @Scheduled(cron="0 0 9 * * *") checkStalledJobs(). Gọi ReminderService.'},
+  {d:0, icon:'f', name:'controller/', cls:'pkg'},
+  {d:1, icon:'i', name:'AuthController.java', cls:'file', desc:'/auth/**', badge:'M1', bc:'b-m1', tip:'POST /auth/register, POST /auth/login, GET /auth/me.'},
+  {d:1, icon:'i', name:'JobController.java', cls:'file', desc:'/jobs/**', badge:'M2', bc:'b-m2', tip:'GET/POST/PUT/DELETE /jobs, PATCH /jobs/{id}/status, POST /jobs/scrape.'},
+  {d:1, icon:'i', name:'CVController.java', cls:'file', desc:'/cv/**', badge:'M3', bc:'b-m3', tip:'POST /cv/upload (multipart/form-data), GET /cv/active.'},
+  {d:1, icon:'i', name:'AnalyticsController.java', cls:'file', desc:'/analytics/**', badge:'M5', bc:'b-m5', tip:'GET /analytics/summary, /funnel, /weekly, /skills.'},
+  {d:0, icon:'f', name:'dto/', cls:'pkg'},
+  {d:1, icon:'i', name:'request/', cls:'file', desc:'LoginRequest, RegisterRequest…', tip:'Record hoặc class thuần với @Valid annotation. Tách riêng request DTO để không expose entity ra ngoài.'},
+  {d:1, icon:'i', name:'response/', cls:'file', desc:'JobResponse, AiResultDTO…', tip:'Chỉ include field cần thiết — không trả nguyên entity về frontend.'},
+  {d:0, icon:'f', name:'exception/', cls:'pkg'},
+  {d:1, icon:'i', name:'GlobalExceptionHandler.java', cls:'file', desc:'@RestControllerAdvice', tip:'Xử lý ResourceNotFoundException (404), ValidationException (400), UnauthorizedException (401) thành JSON response nhất quán.'},
+  {d:1, icon:'i', name:'ResourceNotFoundException.java', cls:'file', desc:'404', tip:''},
+  {d:0, icon:'f', name:'security/', cls:'pkg', badge:'M1', bc:'b-m1'},
+  {d:1, icon:'i', name:'JwtAuthFilter.java', cls:'file', desc:'OncePerRequestFilter', tip:'Extract token từ header → validate → set SecurityContext. Chạy trước mọi request.'},
+  {d:1, icon:'i', name:'UserDetailsServiceImpl.java', cls:'file', desc:'loadUserByUsername', tip:'Spring Security gọi khi authenticate. Load user từ DB theo email.'},
+];
+
+const nodes2 = [
+  {d:0, icon:'f', name:'resources/', cls:'pkg'},
+  {d:1, icon:'i', name:'application.yml', cls:'config', desc:'main config', tip:'spring.datasource, spring.jpa, jwt.secret, openai.api-key, spring.mail, spring.data.redis — đọc từ env vars.'},
+  {d:1, icon:'i', name:'application-dev.yml', cls:'config', desc:'local override', tip:'docker-compose DB URL, Redis localhost. Không commit lên git nếu chứa secret.'},
+  {d:1, icon:'f', name:'db/migration/', cls:'pkg'},
+  {d:2, icon:'i', name:'V1__create_users.sql', cls:'config', badge:'M1', bc:'b-m1', tip:'Flyway migration. Tự chạy khi start app, không cần chạy tay.'},
+  {d:2, icon:'i', name:'V2__create_jobs.sql', cls:'config', badge:'M2', bc:'b-m2'},
+  {d:2, icon:'i', name:'V3__create_cv_analysis.sql', cls:'config', badge:'M3', bc:'b-m3'},
+  {d:1, icon:'f', name:'templates/', cls:'pkg', badge:'M4', bc:'b-m4'},
+  {d:2, icon:'i', name:'deadline-reminder.html', cls:'config', tip:'Thymeleaf template cho email nhắc deadline.'},
+  {d:2, icon:'i', name:'followup-reminder.html', cls:'config', tip:'Thymeleaf template cho email nhắc follow-up sau 14 ngày.'},
+  {d:0, icon:'f', name:'test/java/com/joblens/', cls:'pkg'},
+  {d:1, icon:'i', name:'service/JobServiceTest.java', cls:'test', tip:'Unit test dùng @ExtendWith(MockitoExtension.class). Mock repository, verify logic CRUD.'},
+  {d:1, icon:'i', name:'service/AIServiceTest.java', cls:'test', tip:'Mock OpenAI HTTP call bằng WireMock. Test parse JSON response, cache hit/miss.'},
+  {d:1, icon:'i', name:'controller/JobControllerTest.java', cls:'test', tip:'@WebMvcTest — test HTTP layer, không load full context. Dùng @WithMockUser.'},
+  {d:1, icon:'i', name:'integration/AuthIntegrationTest.java', cls:'test', tip:'@SpringBootTest + Testcontainers PostgreSQL. Test full flow: register → login → call API.'},
+];
+
+const nodes3 = [
+  {d:0, icon:'i', name:'docker-compose.yml', cls:'config', badge:'M6', bc:'b-m6', tip:'Services: backend, frontend, postgres:16, redis:7. Health check postgres trước khi backend start.'},
+  {d:0, icon:'i', name:'docker-compose.dev.yml', cls:'config', badge:'M6', bc:'b-m6', tip:'Override cho dev: mount source code, hot reload, expose ports.'},
+  {d:0, icon:'i', name:'.env.example', cls:'config', tip:'Template env vars. Commit file này, KHÔNG commit .env thật.'},
+  {d:0, icon:'i', name:'Dockerfile', cls:'config', badge:'M6', bc:'b-m6', tip:'Multi-stage: stage 1 dùng maven:3.9-eclipse-temurin-21 build JAR. Stage 2 dùng eclipse-temurin:21-jre-alpine chạy — image nhỏ hơn 5x.'},
+  {d:0, icon:'i', name:'pom.xml', cls:'config', tip:'Dependencies: spring-boot-starter-web, security, data-jpa, data-redis, mail, validation, jjwt, jsoup, pdfbox, openai-java, flyway, lombok, springdoc-openapi, testcontainers.'},
+  {d:0, icon:'i', name:'README.md', cls:'file', badge:'M6', bc:'b-m6', tip:'Demo GIF, tech stack, hướng dẫn chạy local bằng 1 lệnh, link demo public.'},
+];
+
+function iconChar(icon, name) {
+  if (icon === 'f') return '<i class="ti ti-folder" aria-hidden="true" style="color:#EF9F27;font-size:14px"></i>';
+  if (name.endsWith('.java')) return '<i class="ti ti-coffee" aria-hidden="true" style="color:#378ADD;font-size:14px"></i>';
+  if (name.endsWith('.yml') || name.endsWith('.yaml') || name.endsWith('.sql')) return '<i class="ti ti-settings" aria-hidden="true" style="color:#854F0B;font-size:14px"></i>';
+  if (name.endsWith('.html')) return '<i class="ti ti-mail" aria-hidden="true" style="color:#D4537E;font-size:14px"></i>';
+  if (name.endsWith('Test.java')) return '<i class="ti ti-check" aria-hidden="true" style="color:#639922;font-size:14px"></i>';
+  if (name === 'README.md') return '<i class="ti ti-file-text" aria-hidden="true" style="font-size:14px"></i>';
+  if (name === 'pom.xml' || name === 'Dockerfile' || name === '.env.example') return '<i class="ti ti-settings" aria-hidden="true" style="color:#854F0B;font-size:14px"></i>';
+  return '<i class="ti ti-file" aria-hidden="true" style="font-size:14px"></i>';
+}
+
+function buildTree(containerId, data) {
+  const container = document.getElementById(containerId);
+  const tooltip = document.getElementById('tooltip');
+  data.forEach(n => {
+    const row = document.createElement('div');
+    row.className = 'row';
+    const indentStr = '  '.repeat(n.d);
+    const connector = n.d > 0 ? (n.icon === 'f' ? '├─ ' : '│  ').replace('│  ','├─ ') : '';
+    let inner = `<span class="indent">${indentStr}${n.d > 0 ? '├─ ' : ''}</span>`;
+    inner += `<span class="icon">${iconChar(n.icon, n.name)}</span>`;
+    inner += `<span class="name ${n.cls||''}">${n.name}</span>`;
+    if (n.badge) inner += `<span class="badge ${n.bc||''}">${n.badge}</span>`;
+    if (n.desc) inner += `<span class="desc">${n.desc}</span>`;
+    row.innerHTML = inner;
+    if (n.tip) {
+      row.addEventListener('mouseenter', e => {
+        tooltip.textContent = n.tip;
+        tooltip.classList.add('show');
+        const rect = row.getBoundingClientRect();
+        const wrapRect = row.closest('.wrap').getBoundingClientRect();
+        tooltip.style.top = (rect.bottom - wrapRect.top + 4) + 'px';
+        tooltip.style.left = Math.min(rect.left - wrapRect.left, wrapRect.width - 290) + 'px';
+      });
+      row.addEventListener('mouseleave', () => tooltip.classList.remove('show'));
+    }
+    container.appendChild(row);
+  });
+}
+
+buildTree('tree', nodes);
+buildTree('tree2', nodes2);
+buildTree('tree3', nodes3);
+</script>
