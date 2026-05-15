@@ -1,3 +1,39 @@
 spring:
   application:
     name: trackify
+
+  datasource:
+    url: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres
+    username: postgres.tuqobhixvhybfmvldlnc
+    password: z01659898459z
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+trackify:
+  jwt:
+    # NOTE: Prod nên set via env vars: TRACKIFY_JWT_ACCESS_SECRET, TRACKIFY_JWT_REFRESH_SECRET
+    access-secret: ${TRACKIFY_JWT_ACCESS_SECRET:dev-access-secret-change-me-dev-access-secret-change-me}
+    refresh-secret: ${TRACKIFY_JWT_REFRESH_SECRET:dev-refresh-secret-change-me-dev-refresh-secret-change-me}
+
+    # access ~15 phút, refresh ~14 ngày (ms)
+    access-expiration-ms: ${TRACKIFY_JWT_ACCESS_EXPIRATION_MS:900000}
+    refresh-expiration-ms: ${TRACKIFY_JWT_REFRESH_EXPIRATION_MS:1209600000}
+
+    access-cookie-name: TRACKIFY_ACCESS_TOKEN
+    refresh-cookie-name: TRACKIFY_REFRESH_TOKEN
+
+    # Khi chạy local bạn có thể để false; prod nên bật true
+    cookie-secure: ${TRACKIFY_JWT_COOKIE_SECURE:false}
+
+cloudinary:
+  api-key: 647625272691861
+  api-secret: 3TgR9iXEmN8u4xF8sdhGO0nYC5E
+  cloud-name: dmnfscquv
