@@ -1,0 +1,50 @@
+
+> fe@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.6 (Turbopack)
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 4.0s
+  Running TypeScript ...
+  Finished TypeScript in 5.5s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/26) ...
+  Generating static pages using 11 workers (6/26) 
+  Generating static pages using 11 workers (12/26) 
+  Generating static pages using 11 workers (19/26) 
+Γ£ô Generating static pages using 11 workers (26/26) in 387ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ ╞Æ /analytics
+Γö£ ╞Æ /api/proxy/auth/clear-access
+Γö£ ╞Æ /api/proxy/auth/clear-tokens
+Γö£ ╞Æ /api/proxy/auth/login
+Γö£ ╞Æ /api/proxy/auth/me
+Γö£ ╞Æ /api/proxy/auth/register
+Γö£ ╞Æ /api/proxy/cvs/active
+Γö£ ╞Æ /api/proxy/cvs/upload
+Γö£ ╞Æ /api/proxy/jobs/[id]
+Γö£ ╞Æ /api/proxy/jobs/[id]/status
+Γö£ ╞Æ /api/proxy/jobs/add
+Γö£ ╞Æ /api/proxy/jobs/applications
+Γö£ ╞Æ /api/proxy/jobs/kanban
+Γö£ ╞Æ /api/proxy/jobs/overview-stats
+Γö£ ╞Æ /api/proxy/jobs/pipeline-funnel
+Γö£ ╞Æ /api/proxy/jobs/status-conversion-rates
+Γö£ ╞Æ /api/proxy/jobs/top-missing-skills
+Γö£ ╞Æ /api/proxy/users/me
+Γö£ ╞Æ /applications
+Γö£ ╞Æ /dashboard
+Γö£ ╞Æ /kanban
+Γö£ Γùï /login
+Γö£ Γùï /register
+Γöö ╞Æ /settings
+
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

@@ -1,29 +1,23 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { BACKEND_BASE_URL } from "@/core/http/axiosServer";
+import { axiosServer } from "@/core/http/axiosServer";
+
+type ApiResponse<T> = {
+  status: number;
+  success: boolean;
+  errorCode: string | null;
+  message: string | null;
+  path: string | null;
+  method: string | null;
+  details: Record<string, unknown>;
+  data: T;
+};
 
 type MeResponse = {
+  id: string;
   email: string;
   username: string;
   fullName: string | null;
   avatarUrl: string | null;
-};
-
-const ACCESS_COOKIE_NAME = "TRACKIFY_ACCESS_TOKEN";
-const REFRESH_COOKIE_NAME = "TRACKIFY_REFRESH_TOKEN";
-
-const buildCookieHeader = async (): Promise<string> => {
-  const cookieStore = await cookies();
-
-  const accessToken = cookieStore.get(ACCESS_COOKIE_NAME)?.value;
-  const refreshToken = cookieStore.get(REFRESH_COOKIE_NAME)?.value;
-
-  return [
-    accessToken ? `${ACCESS_COOKIE_NAME}=${accessToken}` : "",
-    refreshToken ? `${REFRESH_COOKIE_NAME}=${refreshToken}` : "",
-  ]
-    .filter(Boolean)
-    .join("; ");
 };
 
 export async function PATCH(request: Request) {
@@ -47,24 +41,23 @@ export async function PATCH(request: Request) {
     body.append("avatar", avatarFile, avatarFile.name || "avatar.png");
   }
 
-  const cookieHeader = await buildCookieHeader();
-
   try {
-    const res = await fetch(`${BACKEND_BASE_URL}/api/users/me`, {
-      method: "PATCH",
-      headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+    const res = await axiosServer.patch<ApiResponse<MeResponse>>(
+      "/api/users/me",
       body,
-    });
+    );
 
-    const data = (await res.json().catch(() => null)) ?? {
+    return NextResponse.json(res.data, { status: res.status });
+  } catch (error: unknown) {
+    const axiosError = error as {
+      response?: { status?: number; data?: unknown };
+    };
+
+    const status = axiosError.response?.status ?? 500;
+    const data = axiosError.response?.data ?? {
       message: "Proxy update profile failed",
     };
 
-    return NextResponse.json(data, { status: res.status });
-  } catch {
-    return NextResponse.json(
-      { message: "Proxy update profile failed" },
-      { status: 500 },
-    );
+    return NextResponse.json(data, { status });
   }
 }

@@ -1,0 +1,98 @@
+export default function LogoSvg() {
+  return (
+    <svg
+      viewBox='0 0 60 60'
+      x='0'
+      y='0'
+      width='77.93395427603726'
+      height='77.93395427603726'
+    >
+      <g
+        hollow-target='iconBnFill'
+        mask='url(#a5b54af9-e51d-4f19-95c1-02e8b15f9dfe)'
+      >
+        <g>
+          <svg
+            fill='#000000'
+            xmlns='http://www.w3.org/2000/svg'
+            version='1.1'
+            x='0'
+            y='0'
+            viewBox='5 5 90 90'
+            width='60'
+            height='60'
+            filter='url(#1WkeSzzrHwOZ0LWEeYWsp)'
+          >
+            <g transform='scale(1, 1) skewX(0)'>
+              <g>
+                <g>
+                  <path d='M50,5L5,50l45,45l45-45L50,5z'></path>
+                </g>
+              </g>
+            </g>
+            <defs>
+              <filter id='1WkeSzzrHwOZ0LWEeYWsp'>
+                <feColorMatrix
+                  type='matrix'
+                  values='0 0 0 0 0.95703125  0 0 0 0 0.5  0 0 0 0 0.125  0 0 0 1 0'
+                ></feColorMatrix>
+              </filter>
+            </defs>
+          </svg>
+        </g>{" "}
+        <g filter='url(#colors5849526214)'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 42.29296875 50.203125'
+            width='35'
+            height='35'
+            x='12.5'
+            y='12.5'
+          >
+            <path
+              transform='translate(-0.03515625 50.203125)'
+              d='M42.33-48.83L42.33-48.83Q42.33-47.21 38.92-47.21L38.92-47.21L30.76-47.21L30.76 0L12.76 0L12.76-47.21L7.49-47.21Q4.78-47.21 3.76-46.97L3.76-46.97Q2.43-46.69 1.83-46.69L1.83-46.69Q0.04-46.69 0.04-48.09L0.04-48.09Q0.04-49.75 3.52-49.75L3.52-49.75L34.88-49.75Q37.30-49.75 38.46-49.96L38.46-49.96Q39.87-50.20 40.57-50.20L40.57-50.20Q42.33-50.20 42.33-48.83Z'
+            ></path>
+          </svg>
+        </g>
+      </g>
+      <mask id='a5b54af9-e51d-4f19-95c1-02e8b15f9dfe'>
+        <g fill='white'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            version='1.1'
+            x='0'
+            y='0'
+            viewBox='5 5 90 90'
+            width='60'
+            height='60'
+          >
+            <g transform='scale(1, 1) skewX(0)'>
+              <g>
+                <g>
+                  <path d='M50,5L5,50l45,45l45-45L50,5z'></path>
+                </g>
+              </g>
+            </g>
+            <defs></defs>
+          </svg>
+        </g>{" "}
+        <g fill='black'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            viewBox='0 0 42.29296875 50.203125'
+            width='35'
+            height='35'
+            x='12.5'
+            y='12.5'
+          >
+            <path
+              transform='translate(-0.03515625 50.203125)'
+              d='M42.33-48.83L42.33-48.83Q42.33-47.21 38.92-47.21L38.92-47.21L30.76-47.21L30.76 0L12.76 0L12.76-47.21L7.49-47.21Q4.78-47.21 3.76-46.97L3.76-46.97Q2.43-46.69 1.83-46.69L1.83-46.69Q0.04-46.69 0.04-48.09L0.04-48.09Q0.04-49.75 3.52-49.75L3.52-49.75L34.88-49.75Q37.30-49.75 38.46-49.96L38.46-49.96Q39.87-50.20 40.57-50.20L40.57-50.20Q42.33-50.20 42.33-48.83Z'
+            ></path>
+          </svg>
+        </g>
+      </mask>
+    </svg>
+  );
+}

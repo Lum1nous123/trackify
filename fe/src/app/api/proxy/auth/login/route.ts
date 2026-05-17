@@ -21,25 +21,45 @@ type AuthTokensResponse = {
   refreshToken: string;
 };
 
+type ApiResponse<T> = {
+  status: number;
+  success: boolean;
+  errorCode: string | null;
+  message: string | null;
+  path: string | null;
+  method: string | null;
+  details: Record<string, unknown>;
+  data: T;
+};
+
 export async function POST(request: Request) {
   const body = (await request.json()) as LoginRequestBody;
 
   try {
-    const res = await axiosServer.post<AuthTokensResponse>(
+    const res = await axiosServer.post<ApiResponse<AuthTokensResponse>>(
       "/api/auth/login",
       body,
     );
 
     const response = NextResponse.json({ ok: true });
 
-    response.cookies.set(ACCESS_COOKIE_NAME, res.data.accessToken, {
+    const tokens = res.data.data;
+
+    if (!tokens?.accessToken || !tokens?.refreshToken) {
+      return NextResponse.json(
+        { message: "Proxy login failed: missing tokens" },
+        { status: 500 },
+      );
+    }
+
+    response.cookies.set(ACCESS_COOKIE_NAME, tokens.accessToken, {
       httpOnly: true,
       secure: getCookieSecure(),
       sameSite: "lax",
       path: "/",
     });
 
-    response.cookies.set(REFRESH_COOKIE_NAME, res.data.refreshToken, {
+    response.cookies.set(REFRESH_COOKIE_NAME, tokens.refreshToken, {
       httpOnly: true,
       secure: getCookieSecure(),
       sameSite: "lax",

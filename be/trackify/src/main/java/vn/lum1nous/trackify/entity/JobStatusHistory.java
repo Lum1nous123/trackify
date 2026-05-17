@@ -9,19 +9,32 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.Instant;
-import java.util.Objects;
 import java.util.UUID;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 @Entity
 @Table(name = "job_status_histories")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class JobStatusHistory {
 
     @Id
     @UuidGenerator
     @GeneratedValue(generator = "uuid2")
     @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
+    @EqualsAndHashCode.Include
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -37,50 +50,4 @@ public class JobStatusHistory {
     @CreationTimestamp
     @Column(name = "changed_at", nullable = false, updatable = false)
     private Instant changedAt;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public Job getJob() {
-        return job;
-    }
-
-    public void setJob(Job job) {
-        this.job = job;
-    }
-
-    public String getFromStatus() {
-        return fromStatus;
-    }
-
-    public void setFromStatus(String fromStatus) {
-        this.fromStatus = fromStatus;
-    }
-
-    public String getToStatus() {
-        return toStatus;
-    }
-
-    public void setToStatus(String toStatus) {
-        this.toStatus = toStatus;
-    }
-
-    public Instant getChangedAt() {
-        return changedAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof JobStatusHistory that))
-            return false;
-        return id != null && id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
 }

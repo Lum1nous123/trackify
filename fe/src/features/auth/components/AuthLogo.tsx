@@ -31,7 +31,7 @@ export function AuthLogo() {
 
       <div className='leading-tight'>
         <div className='text-[28px] font-extrabold tracking-tight text-black'>
-          JobTrack<span className='text-[#4F46E5]'>r</span>
+          Trackify<span className='text-[#4F46E5]'>r</span>
         </div>
       </div>
     </div>

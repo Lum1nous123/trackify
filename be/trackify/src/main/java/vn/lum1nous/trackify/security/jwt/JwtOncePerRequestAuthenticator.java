@@ -65,8 +65,6 @@ public class JwtOncePerRequestAuthenticator extends OncePerRequestFilter {
 
         String cookieHeader = request.getHeader(HttpHeaders.COOKIE);
 
-        log.info("cookieHeader: {}", cookieHeader);
-
         String email = resolveEmailFromCookies(cookieHeader);
 
         if (email != null && !email.isBlank()) {

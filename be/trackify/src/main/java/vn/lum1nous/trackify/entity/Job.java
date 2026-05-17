@@ -9,24 +9,39 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "jobs")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Job {
 
   @Id
   @UuidGenerator
   @GeneratedValue(generator = "uuid2")
   @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
+  @EqualsAndHashCode.Include
   private UUID id;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -73,114 +88,4 @@ public class Job {
 
   @OneToMany(mappedBy = "job", fetch = FetchType.LAZY)
   private List<JobStatusHistory> jobStatusHistories = new ArrayList<>();
-
-  public UUID getId() {
-    return id;
-  }
-
-  public User getUser() {
-    return user;
-  }
-
-  public void setUser(User user) {
-    this.user = user;
-  }
-
-  public String getCompanyName() {
-    return companyName;
-  }
-
-  public void setCompanyName(String companyName) {
-    this.companyName = companyName;
-  }
-
-  public String getPosition() {
-    return position;
-  }
-
-  public void setPosition(String position) {
-    this.position = position;
-  }
-
-  public String getJdUrl() {
-    return jdUrl;
-  }
-
-  public void setJdUrl(String jdUrl) {
-    this.jdUrl = jdUrl;
-  }
-
-  public String getJdText() {
-    return jdText;
-  }
-
-  public void setJdText(String jdText) {
-    this.jdText = jdText;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public LocalDate getDeadline() {
-    return deadline;
-  }
-
-  public void setDeadline(LocalDate deadline) {
-    this.deadline = deadline;
-  }
-
-  public String getCompanyLogoUrl() {
-    return companyLogoUrl;
-  }
-
-  public void setCompanyLogoUrl(String companyLogoUrl) {
-    this.companyLogoUrl = companyLogoUrl;
-  }
-
-  public String getNotes() {
-    return notes;
-  }
-
-  public void setNotes(String notes) {
-    this.notes = notes;
-  }
-
-  public Instant getCreatedAt() {
-    return createdAt;
-  }
-
-  public Instant getUpdatedAt() {
-    return updatedAt;
-  }
-
-  public List<AiAnalysis> getAiAnalyses() {
-    return aiAnalyses;
-  }
-
-  public List<ReminderLog> getReminderLogs() {
-    return reminderLogs;
-  }
-
-  public List<JobStatusHistory> getJobStatusHistories() {
-    return jobStatusHistories;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o)
-      return true;
-    if (!(o instanceof Job job))
-      return false;
-    return id != null && id.equals(job.id);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hashCode(id);
-  }
 }

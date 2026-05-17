@@ -1,6 +1,23 @@
+springdotenv:
+  enabled: true
+  directory: .
+  filename: .env
+  ignoreIfMissing: true
+
 spring:
   application:
     name: trackify
+
+  ai:
+    google:
+      genai:
+        api-key: "AIzaSyDo5rPdVb6s8WJ_qwrXPZnO515e7N8aHwo"
+        chat:
+          enable-cached-content: false
+          options:
+            model: gemini-2.5-flash
+            temperature: 0.7
+            max-output-tokens: 8192
 
   datasource:
     url: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres
@@ -19,9 +36,10 @@ spring:
 
 trackify:
   jwt:
-    # NOTE: Prod nên set via env vars: TRACKIFY_JWT_ACCESS_SECRET, TRACKIFY_JWT_REFRESH_SECRET
-    access-secret: ${TRACKIFY_JWT_ACCESS_SECRET:dev-access-secret-change-me-dev-access-secret-change-me}
-    refresh-secret: ${TRACKIFY_JWT_REFRESH_SECRET:dev-refresh-secret-change-me-dev-refresh-secret-change-me}
+    # Hardcoded for local/dev: derived 256-bit HS256 secrets (>=256 bits)
+    # from your be/trackify/.env values, to satisfy JwtService key-length checks.
+    access-secret: -2nCdvFnb83XoncrEId4uwL09buPBwJNDygAyxqdDQI
+    refresh-secret: 0bWPfBWLopDcjR3wuVYikzYflerio5DXGZe8pVpIVm4
 
     # access ~15 phút, refresh ~14 ngày (ms)
     access-expiration-ms: ${TRACKIFY_JWT_ACCESS_EXPIRATION_MS:900000}

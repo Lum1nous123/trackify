@@ -1,29 +1,24 @@
 package vn.lum1nous.trackify.user.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import vn.lum1nous.trackify.cloudinary.CloudinaryService;
 import vn.lum1nous.trackify.auth.dto.MeResponse;
+import vn.lum1nous.trackify.cloudinary.CloudinaryService;
 import vn.lum1nous.trackify.entity.User;
 import vn.lum1nous.trackify.error.ErrorCode;
 import vn.lum1nous.trackify.error.TrackifyException;
 import vn.lum1nous.trackify.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
-
-    public UserService(
-            UserRepository userRepository,
-            CloudinaryService cloudinaryService) {
-        this.userRepository = userRepository;
-        this.cloudinaryService = cloudinaryService;
-    }
 
     @Transactional
     public MeResponse updateMe(String fullName, MultipartFile avatarFile) {
@@ -69,6 +64,7 @@ public class UserService {
         userRepository.save(user);
 
         return new MeResponse(
+                user.getId(),
                 user.getEmail(),
                 user.getUsername(),
                 user.getFullName(),

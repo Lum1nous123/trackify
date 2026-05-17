@@ -1,18 +1,12 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { DashboardShell } from "@/features/dashboard/components/DashboardShell";
-import { axiosClient } from "@/core/http/axiosClient";
-
-type MeResponse = {
-  email: string;
-  username: string;
-  fullName: string | null;
-  avatarUrl: string | null;
-};
+import { useCvActive } from "@/hooks/useCvActive";
+import { useCvUpload } from "@/hooks/useCvUpload";
+import { useMe, useUpdateMe } from "@/hooks/useAuth";
 
 function Toggle({
   checked,
@@ -86,6 +80,12 @@ function isImageFile(file: File): boolean {
   return file.type.startsWith("image/");
 }
 
+function isPdfFile(file: File): boolean {
+  const mimeOk = file.type === "application/pdf";
+  const extOk = file.name.toLowerCase().endsWith(".pdf");
+  return mimeOk || extOk;
+}
+
 async function resizeTo84x84Png(file: File): Promise<{
   blob: Blob;
   previewUrl: string;
@@ -139,20 +139,40 @@ async function resizeTo84x84Png(file: File): Promise<{
   return { blob, previewUrl };
 }
 
+function formatTimeAgo(iso: string): string {
+  const d = new Date(iso);
+  const ms = Date.now() - d.getTime();
+
+  if (!Number.isFinite(ms)) return "—";
+  if (ms < 0) return "vừa mới cập nhật";
+
+  const seconds = Math.floor(ms / 1000);
+  if (seconds < 60) return "vừa xong";
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} phút trước`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} giờ trước`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days} ngày trước`;
+
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) return `${weeks} tuần trước`;
+
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} tháng trước`;
+
+  const years = Math.floor(days / 365);
+  return `${years} năm trước`;
+}
+
 export function SettingsPageClient() {
-  const {
-    data: me,
-    isLoading,
-    refetch,
-  } = useQuery<MeResponse>({
-    queryKey: ["auth", "me"],
-    queryFn: async () => {
-      const res = await axiosClient.get<MeResponse>("/api/proxy/auth/me");
-      return res.data;
-    },
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data: me, isLoading } = useMe();
+  const updateMe = useUpdateMe();
+  const cvUpload = useCvUpload();
+  const { data: cvActive, isLoading: isCvActiveLoading } = useCvActive();
 
   const displayName = useMemo(() => {
     return me?.fullName?.trim() || me?.username || "User";
@@ -165,6 +185,9 @@ export function SettingsPageClient() {
   }, [displayName]);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const cvFileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [cvUploadLoading, setCvUploadLoading] = useState(false);
 
   const [activeTab, setActiveTab] = useState<
     "account" | "notifications" | "ai" | "danger"
@@ -200,8 +223,11 @@ export function SettingsPageClient() {
   });
 
   const onPickAvatarClick = () => fileInputRef.current?.click();
+  const onPickCvClick = () => cvFileInputRef.current?.click();
 
-  const onAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onAvatarFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -223,11 +249,46 @@ export function SettingsPageClient() {
       if (avatarPreviewUrl) URL.revokeObjectURL(avatarPreviewUrl);
       setAvatarPreviewUrl(next.previewUrl);
       setAvatarBlob84(next.blob);
-    } catch (err) {
+    } catch {
       toast.error("Failed to resize avatar.");
     } finally {
       // allow selecting same file again
       if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const onCvFileChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!isPdfFile(file)) {
+      toast.error("CV must be a PDF file.");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("CV is too large. Max size is 10MB.");
+      return;
+    }
+
+    const toastId = toast.loading("Uploading CV…");
+    setCvUploadLoading(true);
+
+    try {
+      const form = new FormData();
+      form.append("cv", file, file.name || "cv.pdf");
+
+      await cvUpload.mutateAsync(form);
+
+      toast.success("CV uploaded successfully.", { id: toastId });
+
+      if (cvFileInputRef.current) cvFileInputRef.current.value = "";
+    } catch {
+      toast.error("Network error while uploading CV.", { id: toastId });
+    } finally {
+      setCvUploadLoading(false);
     }
   };
 
@@ -244,25 +305,10 @@ export function SettingsPageClient() {
     }
 
     const toastId = toast.loading("Saving profile…");
-
     setSaveLoading(true);
+
     try {
-      const res = await fetch("/api/proxy/users/me", {
-        method: "PATCH",
-        body: form,
-        credentials: "include",
-      });
-
-      const data: MeResponse | { message?: string } = await res.json();
-
-      if (!res.ok) {
-        const message =
-          typeof data === "object" && "message" in data
-            ? (data.message ?? "Update failed")
-            : "Update failed";
-        toast.error(message, { id: toastId });
-        return;
-      }
+      await updateMe.mutateAsync(form);
 
       toast.success("Profile updated successfully.", { id: toastId });
 
@@ -270,9 +316,7 @@ export function SettingsPageClient() {
       if (avatarPreviewUrl) URL.revokeObjectURL(avatarPreviewUrl);
       setAvatarPreviewUrl(null);
       setAvatarBlob84(null);
-
-      await refetch();
-    } catch (e) {
+    } catch {
       toast.error("Network error while updating profile.", { id: toastId });
     } finally {
       setSaveLoading(false);
@@ -389,19 +433,38 @@ export function SettingsPageClient() {
 
               <div className='mt-4 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-4'>
                 <div className='text-[12px] font-semibold text-zinc-700'>
-                  Upload resume
+                  {isCvActiveLoading
+                    ? "Checking CV…"
+                    : cvActive?.uploadedAt
+                      ? "CV đã được cập nhật"
+                      : "Upload resume"}
                 </div>
                 <div className='mt-1 text-[12px] text-zinc-500'>
-                  (UI placeholder — wire upload endpoint later)
+                  {isCvActiveLoading
+                    ? "Please wait…"
+                    : cvActive?.uploadedAt
+                      ? `Cập nhật ${formatTimeAgo(cvActive.uploadedAt)}`
+                      : "(UI placeholder — wire upload endpoint later)"}
                 </div>
+                <input
+                  ref={cvFileInputRef}
+                  type='file'
+                  accept='application/pdf'
+                  className='hidden'
+                  onChange={onCvFileChange}
+                />
+
                 <button
                   type='button'
-                  className='mt-4 h-[36px] rounded-xl border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-800 hover:bg-zinc-50'
-                  onClick={() =>
-                    toast.message("CV upload not implemented yet.")
-                  }
+                  className='mt-4 h-[36px] rounded-xl border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60'
+                  disabled={cvUploadLoading}
+                  onClick={onPickCvClick}
                 >
-                  Upload new
+                  {cvUploadLoading
+                    ? "Uploading…"
+                    : cvActive?.uploadedAt
+                      ? "Update CV"
+                      : "Upload new"}
                 </button>
               </div>
             </div>
@@ -561,7 +624,7 @@ export function SettingsPageClient() {
                       AI Preferences
                     </div>
                     <div className='mt-1 text-[12px] text-zinc-500'>
-                      Control how JobTrackr uses AI to help you land your next
+                      Control how Trackify uses AI to help you land your next
                       role.
                     </div>
                   </div>

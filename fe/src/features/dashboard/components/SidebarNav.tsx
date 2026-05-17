@@ -3,16 +3,9 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 
-import { axiosClient } from "@/core/http/axiosClient";
-
-type MeResponse = {
-  email: string;
-  username: string;
-  fullName: string | null;
-  avatarUrl: string | null;
-};
+import { useMe } from "@/hooks/useAuth";
+import LogoSvg from "@/app/logo/LogoSvg";
 
 const NavItemIcon = ({
   kind,
@@ -123,8 +116,18 @@ const NAV: NavLink[] = [
     icon: "dashboard",
   },
   { key: "kanban", label: "Kanban Board", href: "/kanban", icon: "kanban" },
-  { key: "applications", label: "Applications", icon: "applications" },
-  { key: "analytics", label: "Analytics", icon: "analytics" },
+  {
+    key: "applications",
+    label: "Applications",
+    href: "/applications",
+    icon: "applications",
+  },
+  {
+    key: "analytics",
+    label: "Analytics",
+    href: "/analytics",
+    icon: "analytics",
+  },
   { key: "settings", label: "Settings", href: "/settings", icon: "settings" },
 ];
 
@@ -136,15 +139,7 @@ const truncateEmail = (email: string) => {
 export function SidebarNav() {
   const pathname = usePathname();
 
-  const { data: me } = useQuery<MeResponse>({
-    queryKey: ["auth", "me"],
-    queryFn: async () => {
-      const res = await axiosClient.get<MeResponse>("/api/proxy/auth/me");
-      return res.data;
-    },
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data: me } = useMe();
 
   const displayName = me?.fullName || me?.username || "User";
   const emailText = me?.email ? truncateEmail(me.email) : "—";
@@ -159,35 +154,14 @@ export function SidebarNav() {
     <aside className='fixed left-0 top-0 z-20 h-screen w-[260px] bg-[#0F172A] text-white'>
       <div className='flex h-full flex-col'>
         <div className='px-6 pt-6'>
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center gap-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/10'>
-              {/* simple "spark" mark */}
-              <svg
-                width='22'
-                height='22'
-                viewBox='0 0 24 24'
-                fill='none'
-                xmlns='http://www.w3.org/2000/svg'
-                aria-hidden='true'
-              >
-                <path
-                  d='M12 2l1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5L12 2Z'
-                  stroke='#93C5FD'
-                  strokeWidth='1.6'
-                  strokeLinejoin='round'
-                />
-                <path
-                  d='M20.2 14.2l.8 3.2 3.2.8-3.2.8-.8 3.2-3.2-.8 3.2-.8.8-3.2-3.2-.8 3.2-.8.8-3.2Z'
-                  fill='#93C5FD'
-                  opacity='.35'
-                />
-              </svg>
+              <LogoSvg />
             </div>
             <div className='flex flex-col leading-none'>
               <div className='text-[16px] font-extrabold tracking-tight'>
-                JobTrackr
+                Trackify
               </div>
-              <div className='mt-1 text-[12px] text-white/60'>Dashboard</div>
             </div>
           </div>
         </div>
@@ -202,12 +176,7 @@ export function SidebarNav() {
               const inactive =
                 "text-white/70 hover:bg-white/10 hover:text-white ring-1 ring-transparent group-hover:ring-white/10";
 
-              const isActive =
-                item.key === "dashboard"
-                  ? pathname === "/dashboard"
-                  : item.key === "settings"
-                    ? pathname === "/settings"
-                    : false;
+              const isActive = item.href ? pathname === item.href : false;
 
               const cls = `${base} ${isActive ? active : inactive}`;
 

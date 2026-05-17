@@ -39,6 +39,17 @@ export const axiosServer: AxiosInstance = axios.create({
 });
 
 axiosServer.interceptors.request.use(async (config) => {
+  const isFormData =
+    typeof FormData !== "undefined" && config.data instanceof FormData;
+
+  // Avoid sending multipart requests with application/json header.
+  if (isFormData) {
+    const headers = config.headers as Record<string, unknown> | undefined;
+    if (headers && typeof headers === "object" && "Content-Type" in headers) {
+      delete headers["Content-Type"];
+    }
+  }
+
   const cookieHeader = await buildCookieHeader();
 
   if (cookieHeader) {

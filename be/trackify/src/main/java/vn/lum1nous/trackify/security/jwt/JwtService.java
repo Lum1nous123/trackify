@@ -11,6 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import org.springframework.stereotype.Service;
+import vn.lum1nous.trackify.error.ErrorCode;
+import vn.lum1nous.trackify.error.TrackifyException;
 
 @Service
 public class JwtService {
@@ -88,6 +90,13 @@ public class JwtService {
     }
 
     private Key getHmacKey(String secret) {
+        if (secret == null || secret.isBlank()) {
+            throw new TrackifyException(
+                    ErrorCode.INTERNAL_SERVER_ERROR,
+                    500,
+                    "JWT secret is not configured (empty). Please set TRACKIFY_JWT_ACCESS_SECRET and TRACKIFY_JWT_REFRESH_SECRET with a secure value (>= 256 bits).");
+        }
+
         // Accept either:
         // - base64 / base64url secret
         // - raw string secret
@@ -103,6 +112,22 @@ public class JwtService {
             }
         }
 
-        return Keys.hmacShaKeyFor(keyBytes);
+        int bits = keyBytes.length * 8;
+        if (bits < 256) {
+            throw new TrackifyException(
+                    ErrorCode.INTERNAL_SERVER_ERROR,
+                    500,
+                    "JWT secret is too short (" + bits
+                            + " bits). Keys for HS256 must be >= 256 bits. Check TRACKIFY_JWT_ACCESS_SECRET / TRACKIFY_JWT_REFRESH_SECRET.");
+        }
+
+        try {
+            return Keys.hmacShaKeyFor(keyBytes);
+        } catch (IllegalArgumentException e) {
+            throw new TrackifyException(
+                    ErrorCode.INTERNAL_SERVER_ERROR,
+                    500,
+                    "JWT secret is invalid or too short for HS256. Check TRACKIFY_JWT_ACCESS_SECRET / TRACKIFY_JWT_REFRESH_SECRET.");
+        }
     }
 }

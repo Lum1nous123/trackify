@@ -14,10 +14,12 @@ import vn.lum1nous.trackify.entity.User;
 import vn.lum1nous.trackify.repository.UserRepository;
 import vn.lum1nous.trackify.security.jwt.JwtService;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AuthService {
 
     private static final int VERIFICATION_CODE_LENGTH = 6;
@@ -63,8 +65,8 @@ public class AuthService {
 
         userRepository.save(user);
 
-        // Stub: log verification code to console (you chose 3B)
-        System.out.println("[Trackify] Verification code for " + request.getEmail() + " is: " + verificationCode);
+        // Không log verification code ra console/log để tránh rò rỉ thông tin nhạy cảm.
+        log.debug("Generated email verification code for {}", request.getEmail());
 
         String accessToken = jwtService.generateAccessToken(user.getEmail());
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
@@ -146,6 +148,7 @@ public class AuthService {
                 () -> new TrackifyException(ErrorCode.UNAUTHORIZED, 401, "User not found"));
 
         return new MeResponse(
+                user.getId(),
                 user.getEmail(),
                 user.getUsername(),
                 user.getFullName(),

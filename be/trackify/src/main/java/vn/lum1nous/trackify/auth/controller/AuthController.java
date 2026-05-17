@@ -8,12 +8,12 @@ import vn.lum1nous.trackify.auth.dto.MeResponse;
 import vn.lum1nous.trackify.auth.dto.RegisterRequest;
 import vn.lum1nous.trackify.auth.dto.VerifyRequest;
 import vn.lum1nous.trackify.auth.service.AuthService;
+import vn.lum1nous.trackify.error.ApiResponse;
 import vn.lum1nous.trackify.error.ErrorCode;
 import vn.lum1nous.trackify.error.TrackifyException;
 import vn.lum1nous.trackify.security.jwt.JwtCookieExtractor;
 import vn.lum1nous.trackify.security.jwt.JwtProperties;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -42,36 +42,36 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthTokensResponse> register(
+    public ApiResponse<AuthTokensResponse> register(
             @Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ApiResponse.success(200, authService.register(request));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthTokensResponse> login(
+    public ApiResponse<AuthTokensResponse> login(
             @Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(authService.login(request));
+        return ApiResponse.success(200, authService.login(request));
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<AuthTokensResponse> verify(
+    public ApiResponse<AuthTokensResponse> verify(
             @Valid @RequestBody VerifyRequest request) {
-        return ResponseEntity.ok(authService.verify(request));
+        return ApiResponse.success(200, authService.verify(request));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthTokensResponse> refresh(HttpServletRequest request) {
+    public ApiResponse<AuthTokensResponse> refresh(HttpServletRequest request) {
         String cookieHeader = request.getHeader("Cookie");
 
         String refreshToken = jwtCookieExtractor.getCookieValue(
                 cookieHeader,
                 jwtProperties.getRefreshCookieName());
 
-        return ResponseEntity.ok(authService.refreshToken(refreshToken));
+        return ApiResponse.success(200, authService.refreshToken(refreshToken));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<MeResponse> me() {
+    public ApiResponse<MeResponse> me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             throw new TrackifyException(ErrorCode.UNAUTHORIZED, 401, "Unauthorized");
@@ -84,6 +84,6 @@ public class AuthController {
             throw new TrackifyException(ErrorCode.UNAUTHORIZED, 401, "Unauthorized");
         }
 
-        return ResponseEntity.ok(authService.me(email));
+        return ApiResponse.success(200, authService.me(email));
     }
 }

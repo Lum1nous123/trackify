@@ -1,9 +1,8 @@
 package vn.lum1nous.trackify.error;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,53 +11,60 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
         @ExceptionHandler(TrackifyException.class)
-        public ResponseEntity<ErrorResponse> handleTrackifyException(
+        public ApiResponse<Void> handleTrackifyException(
                         TrackifyException ex,
-                        HttpServletRequest request) {
-                ErrorResponse errorResponse = ErrorResponse.of(
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
+
+                response.setStatus(ex.getHttpStatus());
+
+                return ApiResponse.error(
                                 ex.getHttpStatus(),
                                 ex.getErrorCode(),
                                 ex.getMessage() != null ? ex.getMessage() : ex.getErrorCode().getCode(),
                                 request.getRequestURI(),
                                 request.getMethod(),
                                 ex.getDetails());
-
-                return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getHttpStatus()));
         }
 
         @ExceptionHandler(MethodArgumentNotValidException.class)
-        public ResponseEntity<ErrorResponse> handleValidationException(
+        public ApiResponse<Void> handleValidationException(
                         MethodArgumentNotValidException ex,
-                        HttpServletRequest request) {
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
+
                 Map<String, Object> details = Map.of(
-                                "validationErrors", ex.getBindingResult().getAllErrors().stream()
+                                "validationErrors",
+                                ex.getBindingResult().getAllErrors().stream()
                                                 .map(e -> e.getDefaultMessage())
                                                 .filter(m -> m != null && !m.isBlank())
                                                 .toList());
 
-                ErrorResponse errorResponse = ErrorResponse.of(
+                response.setStatus(400);
+
+                return ApiResponse.error(
                                 400,
                                 ErrorCode.BAD_REQUEST,
                                 "Validation failed",
                                 request.getRequestURI(),
                                 request.getMethod(),
                                 details);
-
-                return ResponseEntity.badRequest().body(errorResponse);
         }
 
         @ExceptionHandler(Exception.class)
-        public ResponseEntity<ErrorResponse> handleGenericException(
+        public ApiResponse<Void> handleGenericException(
                         Exception ex,
-                        HttpServletRequest request) {
-                ErrorResponse errorResponse = ErrorResponse.of(
+                        HttpServletRequest request,
+                        HttpServletResponse response) {
+
+                response.setStatus(500);
+
+                return ApiResponse.error(
                                 500,
                                 ErrorCode.INTERNAL_SERVER_ERROR,
                                 ex.getMessage() != null ? ex.getMessage() : "Internal server error",
                                 request.getRequestURI(),
                                 request.getMethod(),
                                 Map.of());
-
-                return ResponseEntity.status(500).body(errorResponse);
         }
 }

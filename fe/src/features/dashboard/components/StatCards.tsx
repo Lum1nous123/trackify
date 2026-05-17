@@ -48,15 +48,15 @@ export function StatCards({ stats }: { stats: DashboardStat[] }) {
         return (
           <article
             key={s.key}
-            className={`group relative overflow-hidden rounded-2xl bg-white p-5 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] ring-1 ring-black/5 transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(99,102,241,0.12)]`}
+            className={`group relative overflow-hidden rounded-2xl bg-white p-5 ring-1 ring-black/5 shadow-[3px_3px_0_rgba(0,0,0,0.06)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_rgba(0,0,0,0.06)]`}
           >
             <div className='flex items-start justify-between gap-3'>
               <div className='min-w-0'>
-                <div className='text-[11px] font-semibold tracking-wide text-zinc-500'>
+                <div className='text-[11px] font-extrabold tracking-widest text-zinc-600'>
                   {s.title}
                 </div>
                 <div className='mt-2 flex items-baseline gap-2'>
-                  <div className='text-[38px] font-extrabold leading-none tracking-tight text-zinc-900'>
+                  <div className='text-[40px] font-black leading-none tracking-tight text-black'>
                     {s.value}
                   </div>
                 </div>

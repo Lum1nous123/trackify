@@ -87,7 +87,7 @@ export function AuthShell({
           </div>
 
           <footer className='mt-8 w-full max-w-md text-center text-[12px] text-zinc-500'>
-            © 2024 JobTrackr Inc. All rights reserved.
+            © 2024 Trackify Inc. All rights reserved.
           </footer>
 
           <div className='mt-3 hidden w-full max-w-md items-center justify-center gap-8 text-[14px] text-zinc-800 md:flex'>

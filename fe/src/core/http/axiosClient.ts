@@ -71,6 +71,20 @@ export const axiosClient: AxiosInstance = axios.create({
   baseURL: "",
 });
 
+axiosClient.interceptors.request.use((config) => {
+  const isFormData =
+    typeof FormData !== "undefined" && config.data instanceof FormData;
+
+  if (isFormData) {
+    const headers = config.headers as Record<string, unknown> | undefined;
+    if (headers && typeof headers === "object" && "Content-Type" in headers) {
+      delete headers["Content-Type"];
+    }
+  }
+
+  return config;
+});
+
 axiosClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
