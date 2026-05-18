@@ -24,11 +24,6 @@ public interface JobAnalyticsRepository extends JpaRepository<Job, UUID> {
                     COUNT(*) AS total_applications,
                     COUNT(*) FILTER (WHERE status <> 'SAVED') AS responded_applications
                 FROM user_jobs
-            ),
-            avg_match AS (
-                SELECT AVG(a.match_score)::double precision AS avg_match_score
-                FROM user_jobs uj
-                JOIN ai_analyses a ON a.job_id = uj.id
             )
             SELECT
                 jc.total_applications::bigint AS total_applications,
@@ -36,9 +31,15 @@ public interface JobAnalyticsRepository extends JpaRepository<Job, UUID> {
                     WHEN jc.total_applications = 0 THEN 0
                     ELSE (jc.responded_applications::float / jc.total_applications)
                 END AS response_rate,
-                COALESCE(am.avg_match_score, 0)::double precision AS avg_match_score
+                COALESCE(
+                    (
+                        SELECT AVG(a.match_score)::double precision
+                        FROM user_jobs uj
+                        JOIN ai_analyses a ON a.job_id = uj.id
+                    ),
+                    0
+                )::double precision AS avg_match_score
             FROM job_counts jc
-            CROSS JOIN avg_match am
             """, nativeQuery = true)
     Object[] getOverviewStats(@Param("userId") UUID userId);
 

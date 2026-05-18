@@ -573,14 +573,17 @@ export function JobCreateEditModal({
                               aria-hidden='true'
                             />
                           </div>
-                          <input
-                            {...register("jobDescriptionUrl")}
-                            className={[
-                              "h-[42px] w-full rounded-xl border bg-white px-3 pl-10 pr-3 text-sm text-zinc-900 outline-none",
-                              "border-zinc-200 focus:border-[#4f46e5]/60 focus:ring-1 focus:ring-[#4f46e5]/20",
-                            ].join(" ")}
-                            placeholder='https://careers.company.com/job/...'
-                          />
+
+                          {createPhase === 1 ? (
+                            <input
+                              {...register("jobDescriptionUrl")}
+                              className={[
+                                "h-[42px] w-full rounded-xl border bg-white px-3 pl-10 pr-3 text-sm text-zinc-900 outline-none",
+                                "border-zinc-200 focus:border-[#4f46e5]/60 focus:ring-1 focus:ring-[#4f46e5]/20 border-4",
+                              ].join(" ")}
+                              placeholder='https://careers.company.com/job/...'
+                            />
+                          ) : null}
                         </div>
 
                         <div className='flex-shrink-0'>{aiBadge}</div>
@@ -848,14 +851,17 @@ export function JobCreateEditModal({
                                     aria-hidden='true'
                                   />
                                 </div>
-                                <input
-                                  {...register("jobDescriptionUrl")}
-                                  className={[
-                                    "h-[42px] w-full rounded-xl border bg-white px-3 pl-10 pr-3 text-sm text-zinc-900 outline-none",
-                                    "border-zinc-200 focus:border-[#4f46e5]/60 focus:ring-1 focus:ring-[#4f46e5]/20",
-                                  ].join(" ")}
-                                  placeholder='https://careers.company.com/job/...'
-                                />
+
+                                {createPhase === 2 ? (
+                                  <input
+                                    {...register("jobDescriptionUrl")}
+                                    className={[
+                                      "h-[42px] w-full rounded-xl border bg-white px-3 pl-10 pr-3 text-sm text-zinc-900 outline-none",
+                                      "border-zinc-200 focus:border-[#4f46e5]/60 focus:ring-1 focus:ring-[#4f46e5]/20",
+                                    ].join(" ")}
+                                    placeholder='https://careers.company.com/job/...'
+                                  />
+                                ) : null}
                               </div>
 
                               <div className='flex-shrink-0'>{aiBadge}</div>

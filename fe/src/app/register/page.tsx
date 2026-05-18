@@ -257,7 +257,7 @@ export default function RegisterPage() {
                 type='email'
                 autoComplete='email'
                 placeholder='you@email.com'
-                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-3 text-sm outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
+                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-3 text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
               />
             </div>
           </div>
@@ -282,7 +282,7 @@ export default function RegisterPage() {
                 type='text'
                 autoComplete='username'
                 placeholder='your_username'
-                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-3 text-sm outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
+                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-3 text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
               />
             </div>
           </div>
@@ -307,7 +307,7 @@ export default function RegisterPage() {
                 type='text'
                 autoComplete='name'
                 placeholder='Your full name'
-                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-3 text-sm outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
+                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-3 text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
               />
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 autoComplete='new-password'
                 placeholder='••••••••'
-                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-12 text-sm outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
+                className='w-full rounded-xl border border-[#d5d4f3] bg-white py-3 pl-11 pr-12 text-sm font-semibold text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-[#4f46e5] focus:ring-1 focus:ring-[#4f46e5]/30'
               />
 
               <button

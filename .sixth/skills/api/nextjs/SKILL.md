@@ -170,6 +170,8 @@ export const userService = {
 
 ### `lib/query-client.ts` — QueryClient config
 
+### Nếu fetch trên server thì xài prefetch query, sau đó truyền hydration xuống các component con.
+
 ```typescript
 import { QueryClient } from "@tanstack/react-query";
 

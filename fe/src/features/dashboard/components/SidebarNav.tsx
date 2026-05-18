@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
+import { axiosClient } from "@/core/http/axiosClient";
 import { useMe } from "@/hooks/useAuth";
 import LogoSvg from "@/app/logo/LogoSvg";
+import { useQueryClient } from "@tanstack/react-query";
 
 const NavItemIcon = ({
   kind,
@@ -138,8 +140,12 @@ const truncateEmail = (email: string) => {
 
 export function SidebarNav() {
   const pathname = usePathname();
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: me } = useMe();
+
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const displayName = me?.fullName || me?.username || "User";
   const emailText = me?.email ? truncateEmail(me.email) : "—";
@@ -149,6 +155,22 @@ export function SidebarNav() {
     if (!email) return "U";
     return email[0]!.toUpperCase();
   }, [me?.email]);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+    try {
+      // Clear both access+refresh cookies (see: fe/src/app/api/proxy/auth/clear-tokens/route.ts)
+      await axiosClient.post("/api/proxy/auth/clear-tokens");
+    } catch {
+      // Even if the request fails, still clear client cache + redirect
+    } finally {
+      queryClient.clear();
+      router.replace("/login");
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <aside className='fixed left-0 top-0 z-20 h-screen w-[260px] bg-[#0F172A] text-white'>
@@ -239,6 +261,15 @@ export function SidebarNav() {
                 {emailText}
               </div>
             </div>
+
+            <button
+              type='button'
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className='rounded-xl bg-white/10 px-3 py-2 text-[12px] font-semibold text-white ring-1 ring-white/20 hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-60'
+            >
+              {isLoggingOut ? "Logging out..." : "Logout"}
+            </button>
           </div>
         </div>
       </div>

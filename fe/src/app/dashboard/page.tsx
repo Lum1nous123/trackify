@@ -4,21 +4,25 @@ import { axiosServer } from "@/core/http/axiosServer";
 
 import { DashboardShell } from "@/features/dashboard/components/DashboardShell";
 import { StatCards } from "@/features/dashboard/components/StatCards";
-import { ApplicationPipelineFunnel } from "@/features/dashboard/components/ApplicationPipelineFunnel";
+import { AiSpotlightClient } from "@/features/dashboard/components/AiSpotlightClient";
 import { RecentActivity } from "@/features/dashboard/components/RecentActivity";
 import { UpcomingDeadlines } from "@/features/dashboard/components/UpcomingDeadlines";
+import { QuickActions } from "@/features/dashboard/components/QuickActions";
+import { KanbanJobsHydrationBoundary } from "@/features/dashboard/components/KanbanJobsHydrationBoundary";
+
+import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { queryKeys } from "@/constants/query-keys";
 
 import type {
   ActivityItem,
   DashboardStat,
   DeadlineItem,
-  PipelineStage,
 } from "@/features/dashboard/mock/mockData";
+
 import type {
   JobKanbanResponse,
   JobKanbanCard,
 } from "@/features/kanban/types/kanban";
-
 import type { Tint } from "@/features/dashboard/utils/tints";
 
 const ACCESS_COOKIE_NAME = "TRACKIFY_ACCESS_TOKEN";
@@ -137,14 +141,14 @@ export default async function DashboardPage() {
   >("/api/jobs/upcoming-deadlines", { params: { userId, limit: 4 } });
   const upcomingDeadlines = upcomingDeadlinesRes.data.data;
 
-  const pipelineFunnelRes = await axiosServer.get<
-    ApiResponse<Record<string, number>>
-  >("/api/jobs/pipeline-funnel", { params: { userId } });
-  const pipelineFunnel = pipelineFunnelRes.data.data;
-
   const kanbanRes =
     await axiosServer.get<ApiResponse<JobKanbanResponse>>("/api/jobs/kanban");
   const kanban = kanbanRes.data.data;
+
+  // Prefetch/seed React Query cache for dashboard client components (AiSpotlight, QuickActions)
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(queryKeys.kanban.jobs(), kanban);
+  const dehydratedState = dehydrate(queryClient);
 
   const stats: DashboardStat[] = [
     {
@@ -170,33 +174,6 @@ export default async function DashboardPage() {
       title: "UPCOMING DEADLINES",
       value: `${dashboardStats.upcomingDeadlines}`,
       accent: "cyan",
-    },
-  ];
-
-  const pipelineStages: PipelineStage[] = [
-    {
-      key: "SAVED",
-      label: "SAVED",
-      count: pipelineFunnel.SAVED ?? 0,
-      tint: "indigo",
-    },
-    {
-      key: "APPLIED",
-      label: "APPLIED",
-      count: pipelineFunnel.APPLIED ?? 0,
-      tint: "violet",
-    },
-    {
-      key: "INTERVIEW",
-      label: "INTERVIEW",
-      count: pipelineFunnel.INTERVIEW ?? 0,
-      tint: "cyan",
-    },
-    {
-      key: "OFFER",
-      label: "OFFER",
-      count: pipelineFunnel.OFFER ?? 0,
-      tint: "amber",
     },
   ];
 
@@ -259,14 +236,24 @@ export default async function DashboardPage() {
       <div className='flex flex-col gap-6 pb-10'>
         <StatCards stats={stats} />
 
-        <div className='grid grid-cols-12 gap-6'>
-          <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-8'>
-            <ApplicationPipelineFunnel stages={pipelineStages} />
-          </section>
+        <div className='flex flex-col gap-6'>
+          <KanbanJobsHydrationBoundary dehydratedState={dehydratedState}>
+            <>
+              <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)]'>
+                <AiSpotlightClient />
+              </section>
 
-          <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-4'>
-            <RecentActivity items={recentItems} />
-          </section>
+              <div className='grid grid-cols-12 gap-6'>
+                <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-4'>
+                  <QuickActions />
+                </section>
+
+                <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-8'>
+                  <RecentActivity items={recentItems} />
+                </section>
+              </div>
+            </>
+          </KanbanJobsHydrationBoundary>
         </div>
 
         <UpcomingDeadlines items={upcomingDeadlineItems} />

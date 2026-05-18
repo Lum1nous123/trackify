@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useMe } from "@/hooks/useAuth";
 import {
   useAnalyticsOverviewStats,
@@ -644,6 +644,31 @@ export default function AnalyticsClient() {
   // Normalize to 0..100 for UI.
   const avgMatchScore =
     rawAvgMatchScore > 1 ? rawAvgMatchScore : rawAvgMatchScore * 100;
+
+  useEffect(() => {
+    if (!overviewStatsQuery.isSuccess) return;
+
+    // Log raw + normalized to pinpoint why UI shows 0%
+    console.log("[analytics] overviewStats raw", {
+      userId,
+      totalApplications,
+      responseRate,
+      rawAvgMatchScore,
+    });
+
+    console.log("[analytics] avgMatchScore normalized", {
+      userId,
+      avgMatchScore, // 0..100
+      uiAvgMatchText: `${Math.round(avgMatchScore)}%`,
+    });
+  }, [
+    overviewStatsQuery.isSuccess,
+    userId,
+    totalApplications,
+    responseRate,
+    rawAvgMatchScore,
+    avgMatchScore,
+  ]);
 
   const offerCount = pipelineFunnel?.["OFFER"] ?? 0;
 

@@ -329,23 +329,62 @@ public class JobServiceImpl implements JobService {
             throw new TrackifyException(ErrorCode.FORBIDDEN, 403, "Forbidden");
         }
 
-        Object[] row = jobAnalyticsRepository.getOverviewStats(userId);
-        if (row == null || row.length < 3) {
-            return vn.lum1nous.trackify.dto.response.OverviewStatsResponse.builder()
-                    .totalApplications(0L)
-                    .responseRate(0d)
-                    .avgMatchScore(0d)
-                    .build();
+        // Compute entirely from entity to avoid native-query / mapping issues.
+        List<Job> jobs = jobRepository.findByUserId(userId);
+        long totalApplicationsJava = jobs == null ? 0L : jobs.size();
+
+        long respondedApplicationsJava = 0L;
+        long aiAnalysesCount = 0L;
+        double matchScoreSum = 0d;
+        java.util.List<Double> sampleMatchScores = new java.util.ArrayList<>();
+
+        if (jobs != null) {
+            for (Job j : jobs) {
+                if (j == null) {
+                    continue;
+                }
+
+                if (j.getStatus() != null && !"SAVED".equals(j.getStatus())) {
+                    respondedApplicationsJava += 1;
+                }
+
+                List<AiAnalysis> analyses = j.getAiAnalyses();
+                if (analyses == null || analyses.isEmpty()) {
+                    continue;
+                }
+
+                for (AiAnalysis a : analyses) {
+                    if (a == null) {
+                        continue;
+                    }
+                    int ms = a.getMatchScore();
+                    aiAnalysesCount += 1;
+                    matchScoreSum += ms;
+
+                    if (sampleMatchScores.size() < 5) {
+                        sampleMatchScores.add((double) ms);
+                    }
+                }
+            }
         }
 
-        long totalApplications = row[0] == null ? 0L : ((Number) row[0]).longValue();
-        double responseRate = row[1] == null ? 0d : ((Number) row[1]).doubleValue();
-        double avgMatchScore = row[2] == null ? 0d : ((Number) row[2]).doubleValue();
+        double responseRateJava = totalApplicationsJava == 0 ? 0d
+                : (respondedApplicationsJava / (double) totalApplicationsJava);
+        double avgMatchScoreJava = aiAnalysesCount == 0 ? 0d : (matchScoreSum / aiAnalysesCount);
+
+        log.info(
+                "getOverviewStats userId={} | totalApplications={} | responseRate={} | aiAnalysesCount={} | avgMatchScore={} | samples={}",
+                userId,
+                totalApplicationsJava,
+                responseRateJava,
+                aiAnalysesCount,
+                avgMatchScoreJava,
+                sampleMatchScores);
 
         return vn.lum1nous.trackify.dto.response.OverviewStatsResponse.builder()
-                .totalApplications(totalApplications)
-                .responseRate(responseRate)
-                .avgMatchScore(avgMatchScore)
+                .totalApplications(totalApplicationsJava)
+                .responseRate(responseRateJava)
+                .avgMatchScore(avgMatchScoreJava)
                 .build();
     }
 
