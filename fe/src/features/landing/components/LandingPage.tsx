@@ -400,7 +400,14 @@ export default function LandingPage() {
             </div>
 
             <div className='col-span-12 lg:col-span-5'>
-              <FakeDashboardMock />
+              <div className='h-[360px] overflow-hidden rounded-[16px] border border-[#23252a] bg-[#0f1011] sm:h-[420px] lg:h-[520px]'>
+                <img
+                  src='/dashboard-hero.png'
+                  alt='Trackify dashboard preview'
+                  className='h-full w-full object-contain object-center'
+                  loading='eager'
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -540,48 +547,15 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                <div className='w-full md:w-auto rounded-[12px] border border-[#23252a] bg-[#0f1011] p-4'>
-                  <div className='flex items-center gap-3'>
-                    <div className='flex h-12 w-12 items-center justify-center rounded-[12px] border border-[#23252a] bg-[#141516]'>
-                      <svg
-                        width='22'
-                        height='22'
-                        viewBox='0 0 24 24'
-                        fill='none'
-                        xmlns='http://www.w3.org/2000/svg'
-                        aria-hidden='true'
-                      >
-                        <path
-                          d='M12 2C8.1 2 5 5.1 5 9c0 5.4 7 13 7 13s7-7.6 7-13c0-3.9-3.1-7-7-7Z'
-                          stroke='#5e6ad2'
-                          strokeWidth='2'
-                          strokeLinejoin='round'
-                        />
-                        <path
-                          d='M9.5 9.5h5'
-                          stroke='#5e6ad2'
-                          strokeWidth='2'
-                          strokeLinecap='round'
-                        />
-                        <path
-                          d='M12 7v5'
-                          stroke='#5e6ad2'
-                          strokeWidth='2'
-                          strokeLinecap='round'
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className='text-[14px] font-semibold text-[#f7f8f8]'>
-                        Processing. Analysis…
-                      </div>
-                      <div className='text-[12px] font-semibold text-[#8a8f98]'>
-                        Simulated for landing.
-                      </div>
-                    </div>
-                  </div>
-                  <div className='mt-3 h-2 w-full overflow-hidden rounded-full bg-[#23252a]'>
-                    <div className='h-full w-[65%] rounded-full bg-[#5e6ad2]' />
+                <div className='w-full md:w-auto overflow-hidden rounded-[12px] border border-[#23252a] bg-[#0f1011]'>
+                  <div className='relative h-[210px] w-full'>
+                    <img
+                      src='/analytics.png'
+                      alt='Trackify preview'
+                      className='h-full w-full object-cover'
+                      style={{ objectPosition: "50% 38%" }}
+                      loading='lazy'
+                    />
                   </div>
                 </div>
               </div>

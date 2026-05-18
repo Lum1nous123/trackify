@@ -198,7 +198,12 @@ export default async function DashboardPage() {
 
   const flatCardActivities: Array<{
     card: JobKanbanCard;
-    activity: { id: string; text: string; changedAt: string };
+    activity: {
+      id: string;
+      text: string;
+      changedAt: string;
+      toStatus?: JobKanbanCard["status"];
+    };
   }> = (kanban?.cards ?? []).flatMap((card) =>
     (card.activity ?? []).map((activity) => ({
       card,
@@ -212,13 +217,36 @@ export default async function DashboardPage() {
       new Date(a.activity.changedAt).getTime(),
   );
 
-  const recentItems: ActivityItem[] = flatCardActivities
+  // RecentActivity (Recent Activity) should show at most 1 line per card/job:
+  // - Keep the newest activity for each card.id
+  // - Then take top 4 by newest activity.changedAt
+  const newestActivityByCardId = new Map<
+    JobKanbanCard["id"],
+    (typeof flatCardActivities)[number]
+  >();
+
+  for (const item of flatCardActivities) {
+    if (!newestActivityByCardId.has(item.card.id)) {
+      newestActivityByCardId.set(item.card.id, item);
+    }
+  }
+
+  const recentItems: ActivityItem[] = Array.from(
+    newestActivityByCardId.values(),
+  )
+    .sort(
+      (a, b) =>
+        new Date(b.activity.changedAt).getTime() -
+        new Date(a.activity.changedAt).getTime(),
+    )
     .slice(0, 4)
     .map(({ card, activity }) => {
       const companyName = card.companyName ?? "";
       const initials = companyName.trim().slice(0, 1).toUpperCase() || "•";
       const when = relTimeFromIso(activity.changedAt);
-      const stText = statusText(card.status);
+
+      const pillStatus = activity.toStatus ?? card.status;
+      const stText = statusText(pillStatus);
 
       return {
         id: activity.id,
@@ -227,7 +255,7 @@ export default async function DashboardPage() {
         company: card.position,
         statusText: stText,
         whenText: `${stText} • ${when}`,
-        tint: tintFromStatus(card.status),
+        tint: tintFromStatus(pillStatus),
       };
     });
 

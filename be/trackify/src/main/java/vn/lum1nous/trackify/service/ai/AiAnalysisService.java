@@ -72,8 +72,8 @@ public class AiAnalysisService {
             throw new TrackifyException(ErrorCode.BAD_REQUEST, 400, "CV.rawText is required");
         }
 
-        String limitedJdText = limitChars(jdText, MAX_JD_CHARS);
-        String limitedCvText = limitChars(cvText, MAX_CV_CHARS);
+        String limitedJdText = cleanText(limitChars(jdText, MAX_JD_CHARS));
+        String limitedCvText = cleanText(limitChars(cvText, MAX_CV_CHARS));
 
         AiAnalysisJson result = callGemini(limitedJdText, limitedCvText);
 
@@ -224,6 +224,21 @@ public class AiAnalysisService {
             List<String> missingSkills,
             List<String> suggestedKeywords,
             String summary) {
+    }
+
+    private String cleanText(String text) {
+        if (text == null)
+            return "";
+        return text
+                // Xóa ký tự control không hợp lệ (gây Gemini crash)
+                .replaceAll("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F\\x7F]", "")
+                // Normalize unicode (fix dấu tiếng Việt bị tách rời)
+                .chars()
+                .filter(c -> c != 0xFFFD) // xóa replacement character
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString()
+                .replaceAll("\\s+", " ")
+                .trim();
     }
 
     private vn.lum1nous.trackify.entity.User getCurrentUser() {

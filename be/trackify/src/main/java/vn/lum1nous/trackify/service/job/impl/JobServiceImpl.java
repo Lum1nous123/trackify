@@ -601,6 +601,11 @@ public class JobServiceImpl implements JobService {
 
         String from = h.getFromStatus() == null ? "" : h.getFromStatus();
         String to = h.getToStatus() == null ? "" : h.getToStatus();
+
+        // expose statuses for FE usage (pill correctness & dedupe)
+        res.setFromStatus(from.isBlank() ? null : from);
+        res.setToStatus(to.isBlank() ? null : to);
+
         String text;
         if (from.isBlank()) {
             text = "Moved to " + to;

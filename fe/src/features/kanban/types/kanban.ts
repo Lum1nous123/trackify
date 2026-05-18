@@ -9,6 +9,8 @@ export type JobStatusActivity = {
   id: string;
   text: string;
   changedAt: string; // ISO
+  fromStatus?: JobStatusKey;
+  toStatus?: JobStatusKey;
 };
 
 export type JobKanbanCard = {

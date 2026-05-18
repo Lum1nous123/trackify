@@ -180,14 +180,14 @@ function MiniPanel({
               <div className='min-w-0'>
                 <div className='flex items-center gap-2'>
                   <div
-                    className={`flex h-[36px] w-[36px] items-center justify-center overflow-hidden ${cardPill.bgSoft} aspect-square shrink-0`}
+                    className={`flex h-[60px] w-[60px] rounded-md items-center justify-center overflow-hidden ${cardPill.bgSoft} aspect-square shrink-0`}
                     aria-hidden='true'
                   >
                     {logoSrc ? (
                       <img
                         src={logoSrc}
                         alt={card.companyName ?? "Company logo"}
-                        className='h-full w-full object-cover'
+                        className='h-full w-full object-contain'
                       />
                     ) : (
                       <div className='text-[13px] font-extrabold text-zinc-700'>
