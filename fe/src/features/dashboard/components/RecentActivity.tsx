@@ -16,10 +16,10 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
     <div>
       <div className='flex items-start justify-between gap-4'>
         <div>
-          <h2 className='text-[16px] font-extrabold tracking-tight text-zinc-900'>
+          <h2 className='text-[16px] font-extrabold tracking-tight text-[#f7f8f8]'>
             Recent Activity
           </h2>
-          <p className='mt-1 text-[12px] font-medium text-zinc-500'>
+          <p className='mt-1 text-[12px] font-medium text-[#d0d6e0]'>
             Latest updates across your applications.
           </p>
         </div>
@@ -27,7 +27,7 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
         <div className='flex items-center gap-2'>
           <button
             type='button'
-            className='rounded-lg px-2 py-1 hover:bg-black/5'
+            className='rounded-lg px-2 py-1 hover:bg-[#141516]'
             aria-label='More activity options'
           >
             <span aria-hidden='true'>⋯</span>
@@ -35,7 +35,7 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
         </div>
       </div>
 
-      <div className='mt-5 divide-y divide-black/5'>
+      <div className='mt-5 divide-y divide-[#23252a]'>
         {items.map((item) => {
           const pill = tintToPill(item.tint);
           return (
@@ -44,21 +44,30 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
               className='flex items-start gap-3 py-4'
             >
               <div
-                className='flex h-10 w-10 items-center justify-center rounded-2xl ring-1 ring-black/5 bg-white'
+                className='flex h-10 w-10 items-center justify-center rounded-md ring-1 ring-[#23252a] bg-[#0f1011] overflow-hidden'
                 aria-hidden='true'
               >
-                <div className='text-[13px] font-extrabold text-zinc-800'>
-                  {item.initials}
-                </div>
+                {item.companyLogoUrl ? (
+                  <img
+                    src={item.companyLogoUrl}
+                    alt={item.name ? `${item.name} logo` : "Company logo"}
+                    className='h-full w-full object-contain'
+                    loading='lazy'
+                  />
+                ) : (
+                  <div className='text-[13px] font-extrabold text-[#f7f8f8]'>
+                    {item.initials}
+                  </div>
+                )}
               </div>
 
               <div className='min-w-0 flex-1'>
                 <div className='flex items-center justify-between gap-3'>
                   <div className='min-w-0'>
-                    <div className='truncate text-[13px] font-semibold text-zinc-900'>
+                    <div className='truncate text-[13px] font-semibold text-[#f7f8f8]'>
                       {item.name}
                     </div>
-                    <div className='truncate text-[12px] text-zinc-500'>
+                    <div className='truncate text-[12px] text-[#d0d6e0]'>
                       {item.company}
                     </div>
                   </div>
@@ -71,7 +80,7 @@ export function RecentActivity({ items }: { items: ActivityItem[] }) {
                   </div>
                 </div>
 
-                <div className='mt-2 text-[12px] text-zinc-500'>
+                <div className='mt-2 text-[12px] text-[#8a8f98]'>
                   {item.whenText}
                 </div>
               </div>

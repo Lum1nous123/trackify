@@ -54,9 +54,9 @@ export function JobKanbanCardView({
       type='button'
       onClick={onSelect}
       className={[
-        "group text-left w-full rounded-2xl border bg-white px-3 py-3",
-        "hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)]",
-        "focus:outline-none focus:ring-2 focus:ring-indigo-500/30",
+        "group text-left w-full rounded-2xl border bg-[#0f1011] border-[#23252a] px-3 py-3",
+        "hover:shadow-[0_12px_28px_rgba(0,0,0,0.28)]",
+        "focus:outline-none focus:ring-2 focus:ring-[#5e6ad2]/30",
       ].join(" ")}
       aria-label={`Open job ${card.companyName} ${card.position}`}
     >
@@ -68,27 +68,27 @@ export function JobKanbanCardView({
               <img
                 src={logoUrl}
                 alt={`${card.companyName} logo`}
-                className='h-10 w-10 rounded-2xl ring-1 bg-white object-cover'
+                className='h-10 w-10 rounded-2xl ring-1 ring-[#23252a] bg-[#0f1011] object-contain'
               />
             ) : (
               <span
                 className={[
-                  "flex h-10 w-10 items-center justify-center rounded-2xl ring-1 bg-white",
+                  "flex h-10 w-10 items-center justify-center rounded-2xl ring-1 ring-[#23252a] bg-[#0f1011]",
                   tintTextClass,
                 ].join(" ")}
                 aria-hidden='true'
               >
-                <span className='text-[13px] font-extrabold text-zinc-900'>
+                <span className='text-[13px] font-extrabold text-[#f7f8f8]'>
                   {initials}
                 </span>
               </span>
             )}
 
             <div className='min-w-0'>
-              <div className='truncate text-[13px] font-extrabold text-zinc-900'>
+              <div className='truncate text-[13px] font-extrabold text-[#f7f8f8]'>
                 {card.companyName}
               </div>
-              <div className='truncate text-[12px] font-semibold text-zinc-500'>
+              <div className='truncate text-[12px] font-semibold text-[#d0d6e0]'>
                 {card.position}
               </div>
             </div>
@@ -98,14 +98,14 @@ export function JobKanbanCardView({
             {matchPercent !== null ? (
               <span
                 className={[
-                  "rounded-full border border-black/10 bg-zinc-50 px-2.5 py-1 text-[12px] font-extrabold text-zinc-900",
+                  "rounded-full border border-[#23252a] bg-[#141516] px-2.5 py-1 text-[12px] font-extrabold text-[#f7f8f8]",
                 ].join(" ")}
                 aria-label={`Match ${matchPercent}%`}
               >
                 {matchPercent}%
               </span>
             ) : (
-              <span className='rounded-full border border-black/10 bg-zinc-50 px-2.5 py-1 text-[12px] font-extrabold text-zinc-900'>
+              <span className='rounded-full border border-[#23252a] bg-[#141516] px-2.5 py-1 text-[12px] font-extrabold text-[#f7f8f8]'>
                 —
               </span>
             )}
@@ -126,7 +126,7 @@ export function JobKanbanCardView({
       </div>
 
       <div className='mt-3 flex flex-wrap gap-2'>
-        <span className='rounded-full bg-indigo-600/5 px-2 py-1 text-[11px] font-extrabold text-indigo-700 ring-1 ring-indigo-500/20'>
+        <span className='rounded-full bg-[#5e6ad2]/10 px-2 py-1 text-[11px] font-extrabold text-[#5e6ad2] ring-1 ring-[#5e6ad2]/20'>
           {card.status}
         </span>
       </div>

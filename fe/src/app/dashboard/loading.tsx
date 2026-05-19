@@ -18,7 +18,7 @@ export default function DashboardLoading() {
           {Array.from({ length: 4 }).map((_, idx) => (
             <article
               key={idx}
-              className='group relative overflow-hidden rounded-2xl bg-white p-5 ring-1 ring-black/5 shadow-[3px_3px_0_rgba(0,0,0,0.06]'
+              className='group relative overflow-hidden rounded-2xl bg-[#0f1011] border border-[#23252a] p-5 ring-1 ring-[#23252a]/60 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'
             >
               <div className='flex items-start justify-between gap-3'>
                 <div className='min-w-0'>
@@ -36,7 +36,7 @@ export default function DashboardLoading() {
         {/* AI Spotlight + below sections */}
         <div className='flex flex-col gap-6'>
           {/* AI Spotlight (full row) */}
-          <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)]'>
+          <section className='col-span-12 rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'>
             <div className='flex items-start justify-between gap-4'>
               <div className='min-w-0'>
                 <div className='h-5 w-[45%] animate-pulse rounded bg-black/10' />
@@ -49,7 +49,7 @@ export default function DashboardLoading() {
               {Array.from({ length: 3 }).map((_, idx) => (
                 <div
                   key={idx}
-                  className='rounded-2xl border border-black/10 bg-white p-4'
+                  className='rounded-2xl border border-[#23252a] bg-[#0f1011] p-4'
                 >
                   <div className='h-4 w-[70%] animate-pulse rounded bg-black/10' />
                   <div className='mt-2 h-3 w-[55%] animate-pulse rounded bg-black/10' />
@@ -71,7 +71,7 @@ export default function DashboardLoading() {
 
           <div className='grid grid-cols-12 gap-6'>
             {/* QuickActions (md:col-span-4) */}
-            <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-4'>
+            <section className='col-span-12 rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)] md:col-span-4'>
               <div className='h-5 w-[55%] animate-pulse rounded bg-black/10' />
               <div className='mt-2 h-3 w-[70%] animate-pulse rounded bg-black/10' />
 
@@ -84,11 +84,11 @@ export default function DashboardLoading() {
                 ))}
               </div>
 
-              <div className='mt-4 h-[70px] w-full rounded-xl border border-black/10 bg-[#F8FAFC]' />
+              <div className='mt-4 h-[70px] w-full rounded-xl border border-[#23252a] bg-[#0f1011]' />
             </section>
 
             {/* RecentActivity (md:col-span-8) */}
-            <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-8'>
+            <section className='col-span-12 rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)] md:col-span-8'>
               <div className='h-5 w-[45%] animate-pulse rounded bg-black/10' />
               <div className='mt-2 h-3 w-[60%] animate-pulse rounded bg-black/10' />
 
@@ -112,7 +112,7 @@ export default function DashboardLoading() {
         </div>
 
         {/* Upcoming deadlines skeleton */}
-        <section className='rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)]'>
+        <section className='rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'>
           <div className='flex items-center justify-between gap-4'>
             <SkeletonBlock className='h-[28px] w-[45%] rounded-2xl bg-black/5' />
             <SkeletonBlock className='h-[28px] w-[25%] rounded-2xl bg-black/5' />
@@ -124,7 +124,7 @@ export default function DashboardLoading() {
                 key={idx}
                 className='flex items-center gap-3'
               >
-                <div className='h-10 w-10 animate-pulse rounded-xl bg-black/5 ring-1 ring-black/5' />
+                <div className='h-10 w-10 animate-pulse rounded-xl bg-black/5 ring-1 ring-[#23252a]' />
                 <div className='flex-1 space-y-2'>
                   <div className='h-3 w-[65%] animate-pulse rounded bg-black/10' />
                   <div className='h-3 w-[45%] animate-pulse rounded bg-black/10' />

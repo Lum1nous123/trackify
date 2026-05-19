@@ -119,7 +119,7 @@ function MiniPanel({
   const panelPill = pillFor(tint);
 
   return (
-    <div className='rounded-2xl border border-black/10 bg-white p-4'>
+    <div className='rounded-2xl border border-[#23252a] bg-[#0f1011] p-4'>
       <div className='flex items-start justify-between gap-3'>
         <div className='min-w-0'>
           <div
@@ -127,7 +127,7 @@ function MiniPanel({
           >
             {title}
           </div>
-          <div className='mt-1 text-[12px] font-medium text-zinc-500'>
+          <div className='mt-1 text-[12px] font-medium text-[#d0d6e0]'>
             {subtitle}
           </div>
         </div>
@@ -175,7 +175,7 @@ function MiniPanel({
           return (
             <div
               key={card.id}
-              className='flex items-start justify-between gap-3 rounded-xl border border-black/10 bg-[#F8FAFC] p-3'
+              className='flex items-start justify-between gap-3 rounded-xl border border-[#23252a] bg-[#0f1011] p-3'
             >
               <div className='min-w-0'>
                 <div className='flex items-center gap-2'>
@@ -190,7 +190,7 @@ function MiniPanel({
                         className='h-full w-full object-contain'
                       />
                     ) : (
-                      <div className='text-[13px] font-extrabold text-zinc-700'>
+                      <div className='text-[13px] font-extrabold text-[#f7f8f8]'>
                         {initials}
                       </div>
                     )}
@@ -298,20 +298,20 @@ export function AiSpotlight({ cards }: { cards: JobKanbanCard[] }) {
   const soonRisk = sortSoonRisk(soonCandidates).slice(0, 3);
 
   return (
-    <section className='rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)]'>
+    <section className='rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'>
       <div className='flex items-start justify-between gap-4'>
         <div>
-          <h2 className='text-[16px] font-extrabold tracking-tight text-zinc-900'>
+          <h2 className='text-[16px] font-extrabold tracking-tight text-[#f7f8f8]'>
             AI Spotlight
           </h2>
-          <p className='mt-1 text-[12px] font-medium text-zinc-500'>
+          <p className='mt-1 text-[12px] font-medium text-[#d0d6e0]'>
             What to improve next — per job, not aggregated.
           </p>
         </div>
 
         <div className='flex items-center gap-2'>
           <div
-            className='rounded-lg border border-black/10 bg-[#F8FAFC] px-3 py-2 text-[12px] font-semibold text-zinc-600'
+            className='rounded-lg border border-[#23252a] bg-[#141516] px-3 py-2 text-[12px] font-semibold text-[#d0d6e0]'
             aria-label='AI powered insights'
           >
             AI on your jobs

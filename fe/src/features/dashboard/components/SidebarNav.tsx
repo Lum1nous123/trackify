@@ -16,7 +16,7 @@ const NavItemIcon = ({
   kind: "dashboard" | "kanban" | "applications" | "analytics" | "settings";
   active?: boolean;
 }) => {
-  const stroke = active ? "#ffffff" : "#A5B4FC";
+  const stroke = active ? "#ffffff" : "#5e6ad2";
   const common = {
     fill: "none",
     xmlns: "http://www.w3.org/2000/svg",
@@ -173,7 +173,7 @@ export function SidebarNav() {
   };
 
   return (
-    <aside className='fixed left-0 top-0 z-20 h-screen w-[260px] bg-[#0F172A] text-white'>
+    <aside className='fixed left-0 top-0 z-20 h-screen w-[260px] bg-[#0f1011] text-[#f7f8f8]'>
       <div className='flex h-full flex-col'>
         <div className='px-6 pt-6'>
           <div className='flex items-center gap-4'>
@@ -194,9 +194,9 @@ export function SidebarNav() {
               const base =
                 "group flex items-center gap-3 rounded-xl px-3 py-2 text-[13px] font-medium transition-colors";
               const active =
-                "bg-indigo-600/90 text-white shadow-[0_10px_25px_rgba(99,102,241,0.25)]";
+                "bg-[#5e6ad2]/90 text-white shadow-[0_10px_25px_rgba(94,106,210,0.25)]";
               const inactive =
-                "text-white/70 hover:bg-white/10 hover:text-white ring-1 ring-transparent group-hover:ring-white/10";
+                "text-[#d0d6e0]/80 hover:bg-[#141516] hover:text-[#f7f8f8] ring-1 ring-transparent group-hover:ring-[#23252a]";
 
               const isActive = item.href ? pathname === item.href : false;
 
@@ -234,7 +234,7 @@ export function SidebarNav() {
           </div>
         </nav>
 
-        <div className='border-t border-white/10 px-6 py-4'>
+        <div className='border-t border-[#23252a] px-6 py-4'>
           <div className='flex items-center gap-3'>
             <div
               className='flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10'
@@ -247,7 +247,7 @@ export function SidebarNav() {
                   className='h-full w-full object-cover'
                 />
               ) : (
-                <div className='text-[14px] font-extrabold text-[#A5B4FC]'>
+                <div className='text-[14px] font-extrabold text-[#5e6ad2]'>
                   {avatarLetter}
                 </div>
               )}
@@ -266,7 +266,7 @@ export function SidebarNav() {
               type='button'
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className='rounded-xl bg-white/10 px-3 py-2 text-[12px] font-semibold text-white ring-1 ring-white/20 hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-60'
+              className='rounded-xl bg-white/10 px-3 py-2 text-[12px] font-semibold text-white ring-1 ring-[#23252a] hover:bg-[#141516] disabled:cursor-not-allowed disabled:opacity-60'
             >
               {isLoggingOut ? "Logging out..." : "Logout"}
             </button>

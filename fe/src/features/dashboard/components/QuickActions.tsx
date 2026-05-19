@@ -150,15 +150,15 @@ export function QuickActions() {
     <div>
       <div className='flex items-start justify-between gap-4'>
         <div>
-          <h2 className='text-[16px] font-extrabold tracking-tight text-zinc-900'>
+          <h2 className='text-[16px] font-extrabold tracking-tight text-[#f7f8f8]'>
             Quick Actions
           </h2>
-          <p className='mt-1 text-[12px] font-medium text-zinc-500'>
+          <p className='mt-1 text-[12px] font-medium text-[#d0d6e0]'>
             Create a job, or move status fast.
           </p>
         </div>
 
-        <div className='text-[12px] font-semibold text-zinc-500'>
+        <div className='text-[12px] font-semibold text-[#d0d6e0]'>
           {safeCards.length} jobs
         </div>
       </div>
@@ -168,7 +168,7 @@ export function QuickActions() {
           <button
             type='button'
             onClick={openCreate}
-            className='h-[40px] rounded-xl bg-[#6366F1] px-3 text-[13px] font-extrabold text-white shadow-[0_12px_0_rgba(79,70,229,0.12)] hover:bg-[#4F46E5] disabled:cursor-not-allowed disabled:opacity-50'
+            className='h-[40px] rounded-xl bg-[#5e6ad2] px-3 text-[13px] font-extrabold text-white shadow-[0_12px_0_rgba(94,106,210,0.12)] hover:bg-[#828fff] disabled:cursor-not-allowed disabled:opacity-50'
             aria-label='Add job'
           >
             ＋ Add
@@ -178,7 +178,7 @@ export function QuickActions() {
             type='button'
             onClick={openEditLatest}
             disabled={!latestAny}
-            className='h-[40px] rounded-xl border border-black/10 bg-white px-3 text-[13px] font-extrabold text-zinc-700 hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50'
+            className='h-[40px] rounded-xl border border-[#23252a] bg-[#0f1011] px-3 text-[13px] font-extrabold text-[#f7f8f8] hover:bg-[#141516] disabled:cursor-not-allowed disabled:opacity-50'
             aria-label='Edit latest job'
           >
             Update
@@ -190,7 +190,7 @@ export function QuickActions() {
             type='button'
             onClick={moveLatestAppliedToInterview}
             disabled={!latestApplied}
-            className='h-[40px] rounded-xl border border-black/10 bg-white px-3 text-[13px] font-extrabold text-zinc-700 hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50'
+            className='h-[40px] rounded-xl border border-[#23252a] bg-[#0f1011] px-3 text-[13px] font-extrabold text-[#f7f8f8] hover:bg-[#141516] disabled:cursor-not-allowed disabled:opacity-50'
             aria-label='Move latest applied job to interview'
             title={
               latestApplied
@@ -205,7 +205,7 @@ export function QuickActions() {
             type='button'
             onClick={moveLatestInterviewToOffer}
             disabled={!latestInterview}
-            className='h-[40px] rounded-xl border border-black/10 bg-white px-3 text-[13px] font-extrabold text-zinc-700 hover:bg-black/5 disabled:cursor-not-allowed disabled:opacity-50'
+            className='h-[40px] rounded-xl border border-[#23252a] bg-[#0f1011] px-3 text-[13px] font-extrabold text-[#f7f8f8] hover:bg-[#141516] disabled:cursor-not-allowed disabled:opacity-50'
             aria-label='Move latest interview job to offer'
             title={
               latestInterview
@@ -217,9 +217,9 @@ export function QuickActions() {
           </button>
         </div>
 
-        <div className='rounded-xl border border-black/10 bg-[#F8FAFC] px-4 py-3'>
-          <div className='text-[12px] font-semibold text-zinc-700'>Tip</div>
-          <div className='mt-1 text-[12px] font-medium text-zinc-500'>
+        <div className='rounded-xl border border-[#23252a] bg-[#141516] px-4 py-3'>
+          <div className='text-[12px] font-semibold text-[#f7f8f8]'>Tip</div>
+          <div className='mt-1 text-[12px] font-medium text-[#d0d6e0]'>
             Use Kanban board for drag & drop details.
           </div>
         </div>

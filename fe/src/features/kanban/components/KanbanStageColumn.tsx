@@ -46,18 +46,18 @@ export function KanbanStageColumn({
     <section
       ref={setNodeRef}
       className={[
-        "min-w-[280px] max-w-[280px] rounded-2xl border bg-white",
-        "border-black/10",
-        isOver ? `shadow-[0_0_0_2px_rgba(99,102,241,0.25)]` : "",
+        "min-w-[280px] max-w-[280px] rounded-2xl border bg-[#0f1011]",
+        "border-[#23252a]",
+        isOver ? `shadow-[0_0_0_2px_rgba(94,106,210,0.25)]` : "",
       ].join(" ")}
     >
       <header
         className={[
-          "flex items-center justify-between gap-3 rounded-t-2xl px-4 py-4 border-b border-black/10",
+          "flex items-center justify-between gap-3 rounded-t-2xl px-4 py-4 border-b border-[#23252a]",
         ].join(" ")}
       >
         <div className='min-w-0'>
-          <div className='text-[12px] font-extrabold tracking-widest text-zinc-900'>
+          <div className='text-[12px] font-extrabold tracking-widest text-[#f7f8f8]'>
             {stageLabel}
           </div>
         </div>
@@ -67,7 +67,7 @@ export function KanbanStageColumn({
             "shrink-0 rounded-full border px-3 py-1 text-[12px] font-extrabold",
             tintBorder,
             tintSoft,
-            "text-zinc-900",
+            "text-[#f7f8f8]",
           ].join(" ")}
           aria-label={`${stageLabel} count ${count}`}
         >
@@ -77,13 +77,13 @@ export function KanbanStageColumn({
 
       <div className='p-3'>
         {cards.length === 0 ? (
-          <div className='rounded-xl border border-dashed border-zinc-200 bg-zinc-50 px-3 py-6 text-center text-[12px] font-semibold text-zinc-400'>
+          <div className='rounded-xl border border-dashed border-[#23252a] bg-[#0f1011] px-3 py-6 text-center text-[12px] font-semibold text-[#8a8f98]'>
             No jobs
           </div>
         ) : null}
 
         {hasSoonDeadline ? (
-          <div className='mb-3 inline-flex items-center gap-2 rounded-lg bg-zinc-50 px-3 py-1 text-[11px] font-extrabold text-zinc-500 ring-1 ring-zinc-200'>
+          <div className='mb-3 inline-flex items-center gap-2 rounded-lg bg-[#141516] px-3 py-1 text-[11px] font-extrabold text-[#d0d6e0] ring-1 ring-[#23252a]'>
             ⚠ Some deadlines are coming up
           </div>
         ) : null}

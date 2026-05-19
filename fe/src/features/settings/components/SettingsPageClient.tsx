@@ -30,8 +30,8 @@ function Toggle({
         "relative inline-flex h-[22px] w-[42px items-center rounded-full border-2",
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
         checked
-          ? "border-indigo-600 bg-indigo-600"
-          : "border-zinc-300 bg-zinc-200",
+          ? "border-[#5e6ad2] bg-[#5e6ad2]"
+          : "border-zinc-700 bg-zinc-800",
       ].join(" ")}
     >
       <span
@@ -59,17 +59,17 @@ function Field({
 }) {
   return (
     <label className='flex flex-col gap-2'>
-      <span className='text-[12px] font-semibold text-zinc-600'>{label}</span>
+      <span className='text-[12px] font-semibold text-[#8a8f98]'>{label}</span>
       <input
         value={value}
         readOnly={readOnly}
         placeholder={placeholder}
         onChange={(e) => onChange?.(e.target.value)}
         className={[
-          "h-[38px] rounded-xl border bg-white px-3 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none",
+          "h-[38px] rounded-xl border bg-[#0f1011] px-3 text-sm text-[#f7f8f8] placeholder:text-[#8a8f98] outline-none",
           readOnly
-            ? "border-zinc-200 bg-zinc-50 text-zinc-900"
-            : "border-zinc-200 focus:border-[#4f46e5]/60 focus:ring-1 focus:ring-[#4f46e5]/20",
+            ? "border-[#23252a] bg-[#141516] text-[#f7f8f8]"
+            : "border-[#23252a] focus:border-[#5e6ad2]/60 focus:ring-1 focus:ring-[#5e6ad2]/20",
         ].join(" ")}
       />
     </label>
@@ -330,10 +330,10 @@ export function SettingsPageClient() {
       <div className='flex flex-col gap-6 pb-10'>
         <div className='flex items-center justify-between gap-4'>
           <div className='min-w-0'>
-            <div className='text-[14px] font-semibold text-zinc-700'>
+            <div className='text-[14px] font-semibold text-[#8a8f98]'>
               {isLoading ? "Loading..." : "Manage your profile & preferences"}
             </div>
-            <div className='mt-1 truncate text-[22px] font-extrabold tracking-tight text-zinc-900'>
+            <div className='mt-1 truncate text-[22px] font-extrabold tracking-tight text-[#f7f8f8]'>
               {displayName}
             </div>
           </div>
@@ -342,7 +342,7 @@ export function SettingsPageClient() {
             type='button'
             onClick={onSave}
             disabled={saveLoading || isLoading}
-            className='h-[38px] rounded-xl bg-[#4f46e5] px-4 text-sm font-semibold text-white shadow-[0_12px_0_rgba(79,70,229,0.12)] hover:bg-[#4338ca] disabled:cursor-not-allowed disabled:opacity-60'
+            className='h-[38px] rounded-xl bg-[#5e6ad2] px-4 text-sm font-semibold text-white shadow-[0_12px_0_rgba(94,106,210,0.12)] hover:bg-[#828fff] disabled:cursor-not-allowed disabled:opacity-60'
           >
             {saveLoading ? "Saving..." : "Save"}
           </button>
@@ -350,13 +350,13 @@ export function SettingsPageClient() {
 
         <div className='grid grid-cols-12 gap-6'>
           {/* Left: personal details + profile card */}
-          <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-4'>
+          <section className='col-span-12 rounded-2xl bg-[#0f1011] p-6 border border-[#23252a] shadow-[0_24px_48px_rgba(0,0,0,0.25)] md:col-span-4'>
             <div className='flex items-center justify-between gap-4'>
               <div className='flex items-center gap-4'>
                 <button
                   type='button'
                   onClick={onPickAvatarClick}
-                  className='relative flex h-[52px] w-[52px] items-center justify-center rounded-full bg-indigo-600/10 ring-1 ring-[#4f46e5]/20 hover:ring-[#4f46e5]/40'
+                  className='relative flex h-[52px] w-[52px] items-center justify-center rounded-full bg-[#5e6ad2]/10 ring-1 ring-[#5e6ad2]/20 hover:ring-[#5e6ad2]/40'
                   aria-label='Change avatar'
                   title='Change avatar'
                 >
@@ -368,14 +368,14 @@ export function SettingsPageClient() {
                       className='h-full w-full rounded-full object-cover'
                     />
                   ) : (
-                    <div className='text-[18px] font-extrabold text-[#4f46e5]'>
+                    <div className='text-[18px] font-extrabold text-[#5e6ad2]'>
                       {isLoading ? "…" : avatarLetter}
                     </div>
                   )}
                 </button>
 
                 <div className='min-w-0'>
-                  <div className='truncate text-[14px] font-bold tracking-tight text-zinc-900'>
+                  <div className='truncate text-[14px] font-bold tracking-tight text-white'>
                     {isLoading ? "Loading..." : displayName}
                   </div>
                   <div className='mt-1 text-[12px] text-zinc-500'>
@@ -394,7 +394,7 @@ export function SettingsPageClient() {
             </div>
 
             <div className='mt-6'>
-              <div className='text-[13px] font-extrabold tracking-tight text-zinc-900'>
+              <div className='text-[13px] font-extrabold tracking-tight text-[#f7f8f8]'>
                 Personal Details
               </div>
 
@@ -427,19 +427,19 @@ export function SettingsPageClient() {
             </div>
 
             <div className='mt-7'>
-              <div className='text-[13px] font-extrabold tracking-tight text-zinc-900'>
+              <div className='text-[13px] font-extrabold tracking-tight text-[#f7f8f8]'>
                 My CV
               </div>
 
-              <div className='mt-4 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-4'>
-                <div className='text-[12px] font-semibold text-zinc-700'>
+              <div className='mt-4 rounded-2xl border border-dashed border-[#23252a] bg-[#0f1011] p-4'>
+                <div className='text-[12px] font-semibold text-[#d0d6e0]'>
                   {isCvActiveLoading
                     ? "Checking CV…"
                     : cvActive?.uploadedAt
                       ? "CV đã được cập nhật"
                       : "Upload resume"}
                 </div>
-                <div className='mt-1 text-[12px] text-zinc-500'>
+                <div className='mt-1 text-[12px] text-[#8a8f98]'>
                   {isCvActiveLoading
                     ? "Please wait…"
                     : cvActive?.uploadedAt
@@ -456,7 +456,7 @@ export function SettingsPageClient() {
 
                 <button
                   type='button'
-                  className='mt-4 h-[36px] rounded-xl border border-zinc-200 bg-white px-3 text-sm font-semibold text-zinc-800 hover:bg-zinc-50 disabled:cursor-not-allowed disabled:opacity-60'
+                  className='mt-4 h-[36px] rounded-xl border border-[#23252a] bg-[#0f1011] px-3 text-sm font-semibold text-[#f7f8f8] hover:bg-[#141516] disabled:cursor-not-allowed disabled:opacity-60'
                   disabled={cvUploadLoading}
                   onClick={onPickCvClick}
                 >
@@ -471,16 +471,16 @@ export function SettingsPageClient() {
           </section>
 
           {/* Right: tabbed preferences */}
-          <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-8'>
+          <section className='col-span-12 rounded-2xl bg-[#0f1011] p-6 border border-[#23252a] shadow-[0_24px_48px_rgba(0,0,0,0.25)] md:col-span-8'>
             <div className='flex flex-col gap-4'>
-              <div className='flex flex-wrap gap-3 border-b border-zinc-200 pb-3'>
+              <div className='flex flex-wrap gap-3 border-b border-[#23252a] pb-3'>
                 <button
                   type='button'
                   className={[
                     "text-[12px] font-extrabold tracking-tight uppercase pb-2 transition-colors",
                     activeTab === "account"
-                      ? "text-[#4f46e5] border-b-2 border-[#4f46e5]"
-                      : "text-zinc-500 hover:text-zinc-800",
+                      ? "text-[#5e6ad2] border-b-2 border-[#5e6ad2]"
+                      : "text-[#8a8f98] hover:text-[#d0d6e0]",
                   ].join(" ")}
                   onClick={() => setActiveTab("account")}
                 >
@@ -492,8 +492,8 @@ export function SettingsPageClient() {
                   className={[
                     "text-[12px] font-extrabold tracking-tight uppercase pb-2 transition-colors",
                     activeTab === "notifications"
-                      ? "text-[#4f46e5] border-b-2 border-[#4f46e5]"
-                      : "text-zinc-500 hover:text-zinc-800",
+                      ? "text-[#5e6ad2] border-b-2 border-[#5e6ad2]"
+                      : "text-[#8a8f98] hover:text-[#d0d6e0]",
                   ].join(" ")}
                   onClick={() => setActiveTab("notifications")}
                 >
@@ -505,8 +505,8 @@ export function SettingsPageClient() {
                   className={[
                     "text-[12px] font-extrabold tracking-tight uppercase pb-2 transition-colors",
                     activeTab === "ai"
-                      ? "text-[#4f46e5] border-b-2 border-[#4f46e5]"
-                      : "text-zinc-500 hover:text-zinc-800",
+                      ? "text-[#5e6ad2] border-b-2 border-[#5e6ad2]"
+                      : "text-[#8a8f98] hover:text-[#d0d6e0]",
                   ].join(" ")}
                   onClick={() => setActiveTab("ai")}
                 >
@@ -518,8 +518,8 @@ export function SettingsPageClient() {
                   className={[
                     "text-[12px] font-extrabold tracking-tight uppercase pb-2 transition-colors",
                     activeTab === "danger"
-                      ? "text-[#4f46e5] border-b-2 border-[#4f46e5]"
-                      : "text-zinc-500 hover:text-zinc-800",
+                      ? "text-[#5e6ad2] border-b-2 border-[#5e6ad2]"
+                      : "text-[#8a8f98] hover:text-[#d0d6e0]",
                   ].join(" ")}
                   onClick={() => setActiveTab("danger")}
                 >
@@ -530,22 +530,22 @@ export function SettingsPageClient() {
               {activeTab === "notifications" ? (
                 <div className='flex flex-col gap-4'>
                   <div>
-                    <div className='text-[13px] font-extrabold text-zinc-900'>
+                    <div className='text-[13px] font-extrabold text-[#f7f8f8]'>
                       Notification Settings
                     </div>
-                    <div className='mt-1 text-[12px] text-zinc-500'>
+                    <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                       Manage how and when you want to be alerted about your
                       applications.
                     </div>
                   </div>
 
                   <div className='space-y-3'>
-                    <div className='flex items-start justify-between gap-4 rounded-xl border border-zinc-100 p-3'>
+                    <div className='flex items-start justify-between gap-4 rounded-xl border border-[#23252a] bg-[#0f1011] p-3'>
                       <div>
-                        <div className='text-[12px] font-extrabold text-zinc-900'>
+                        <div className='text-[12px] font-extrabold text-[#f7f8f8]'>
                           Deadline reminders
                         </div>
-                        <div className='mt-1 text-[12px] text-zinc-500'>
+                        <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                           Go to the next alert hours before an application
                           deadline.
                         </div>
@@ -558,12 +558,12 @@ export function SettingsPageClient() {
                       />
                     </div>
 
-                    <div className='flex items-start justify-between gap-4 rounded-xl border border-zinc-100 p-3'>
+                    <div className='flex items-start justify-between gap-4 rounded-xl border border-[#23252a] p-3'>
                       <div>
-                        <div className='text-[12px] font-extrabold text-zinc-900'>
+                        <div className='text-[12px] font-extrabold text-[#f7f8f8]'>
                           Follow-up nudges
                         </div>
-                        <div className='mt-1 text-[12px] text-zinc-500'>
+                        <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                           Smart reminders to follow up after 7 days of no
                           response.
                         </div>
@@ -576,12 +576,12 @@ export function SettingsPageClient() {
                       />
                     </div>
 
-                    <div className='flex items-start justify-between gap-4 rounded-xl border border-zinc-100 p-3'>
+                    <div className='flex items-start justify-between gap-4 rounded-xl border border-[#23252a] bg-[#0f1011] p-3'>
                       <div>
-                        <div className='text-[12px] font-extrabold text-zinc-900'>
+                        <div className='text-[12px] font-extrabold text-[#f7f8f8]'>
                           Weekly digest
                         </div>
-                        <div className='mt-1 text-[12px] text-zinc-500'>
+                        <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                           A summary of your tracking progress every Monday
                           morning.
                         </div>
@@ -594,12 +594,12 @@ export function SettingsPageClient() {
                       />
                     </div>
 
-                    <div className='flex items-start justify-between gap-4 rounded-xl border border-zinc-100 p-3'>
+                    <div className='flex items-start justify-between gap-4 rounded-xl border border-[#23252a] bg-[#0f1011] p-3'>
                       <div>
-                        <div className='text-[12px] font-extrabold text-zinc-900'>
+                        <div className='text-[12px] font-extrabold text-[#f7f8f8]'>
                           Interview alerts
                         </div>
-                        <div className='mt-1 text-[12px] text-zinc-500'>
+                        <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                           Immediate notifications for new interview invitations.
                         </div>
                       </div>
@@ -620,22 +620,22 @@ export function SettingsPageClient() {
               {activeTab === "ai" ? (
                 <div className='flex flex-col gap-4'>
                   <div>
-                    <div className='text-[13px] font-extrabold text-zinc-900'>
+                    <div className='text-[13px] font-extrabold text-[#f7f8f8]'>
                       AI Preferences
                     </div>
-                    <div className='mt-1 text-[12px] text-zinc-500'>
+                    <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                       Control how Trackify uses AI to help you land your next
                       role.
                     </div>
                   </div>
 
                   <div className='space-y-3'>
-                    <div className='flex items-start justify-between gap-4 rounded-xl border border-zinc-100 p-3'>
+                    <div className='flex items-start justify-between gap-4 rounded-xl border border-[#23252a] bg-[#0f1011] p-3'>
                       <div>
-                        <div className='text-[12px] font-extrabold text-zinc-900'>
+                        <div className='text-[12px] font-extrabold text-[#f7f8f8]'>
                           Market fit analysis
                         </div>
-                        <div className='mt-1 text-[12px] text-zinc-500'>
+                        <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                           AI suggestions based on your experience and your
                           target roles.
                         </div>
@@ -651,12 +651,12 @@ export function SettingsPageClient() {
                       />
                     </div>
 
-                    <div className='flex items-start justify-between gap-4 rounded-xl border border-zinc-100 p-3'>
+                    <div className='flex items-start justify-between gap-4 rounded-xl border border-[#23252a] bg-[#0f1011] p-3'>
                       <div>
-                        <div className='text-[12px] font-extrabold text-zinc-900'>
+                        <div className='text-[12px] font-extrabold text-[#f7f8f8]'>
                           Salary insights
                         </div>
-                        <div className='mt-1 text-[12px] text-zinc-500'>
+                        <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                           Alerts when market trends shift for your location and
                           role.
                         </div>
@@ -678,19 +678,19 @@ export function SettingsPageClient() {
               {activeTab === "account" ? (
                 <div className='flex flex-col gap-4'>
                   <div>
-                    <div className='text-[13px] font-extrabold text-zinc-900'>
+                    <div className='text-[13px] font-extrabold text-[#f7f8f8]'>
                       Account
                     </div>
-                    <div className='mt-1 text-[12px] text-zinc-500'>
+                    <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                       Basic profile info (loaded from{" "}
-                      <span className='font-semibold text-zinc-700'>
+                      <span className='font-semibold text-[#8a8f98]'>
                         /api/auth/me
                       </span>
                       ).
                     </div>
                   </div>
 
-                  <div className='rounded-2xl border border-zinc-100 bg-zinc-50 p-4'>
+                  <div className='rounded-2xl border border-[#23252a] bg-[#141516] p-4'>
                     <div className='flex items-center gap-3'>
                       <div className='flex h-[40px] w-[40px] items-center justify-center rounded-xl bg-white ring-1 ring-zinc-200'>
                         {avatarSrc ? (
@@ -716,9 +716,11 @@ export function SettingsPageClient() {
                       </div>
                     </div>
 
-                    <div className='mt-3 text-[12px] text-zinc-600'>
+                    <div className='mt-3 text-[12px] text-[#d0d6e0]'>
                       Email:{" "}
-                      <span className='font-semibold'>{me?.email ?? "—"}</span>
+                      <span className='font-semibold text-[#f7f8f8]'>
+                        {me?.email ?? "—"}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -727,10 +729,10 @@ export function SettingsPageClient() {
               {activeTab === "danger" ? (
                 <div className='flex flex-col gap-4'>
                   <div>
-                    <div className='text-[13px] font-extrabold text-zinc-900'>
+                    <div className='text-[13px] font-extrabold text-[#f7f8f8]'>
                       Danger Zone
                     </div>
-                    <div className='mt-1 text-[12px] text-zinc-500'>
+                    <div className='mt-1 text-[12px] text-[#d0d6e0]'>
                       Actions are not wired to the backend yet.
                     </div>
                   </div>

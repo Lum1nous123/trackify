@@ -25,6 +25,7 @@ export type ActivityItem = {
   statusText: string;
   whenText: string;
   tint: "violet" | "indigo" | "cyan" | "amber";
+  companyLogoUrl?: string | null;
 };
 
 export type DeadlineItem = {
@@ -34,6 +35,7 @@ export type DeadlineItem = {
   subtitle: string;
   whenText: string;
   urgencyTint: "indigo" | "violet" | "cyan" | "amber";
+  companyLogoUrl?: string | null;
 };
 
 export const mockDashboard = {

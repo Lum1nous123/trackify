@@ -96,10 +96,10 @@ export function KanbanBoard() {
   return (
     <div className='flex flex-col gap-6 pb-10'>
       <div className='flex flex-col gap-2'>
-        <h1 className='text-[18px] font-extrabold tracking-tight text-zinc-900'>
+        <h1 className='text-[18px] font-extrabold tracking-tight text-[#f7f8f8]'>
           Kanban Board
         </h1>
-        <p className='text-[12px] font-medium text-zinc-500'>
+        <p className='text-[12px] font-medium text-[#d0d6e0]'>
           Drag cards between columns. Click a card to edit details.
         </p>
       </div>
@@ -109,12 +109,12 @@ export function KanbanBoard() {
           {STAGES.map((stageKey) => (
             <section
               key={stageKey}
-              className='min-w-[280px] max-w-[280px] rounded-2xl border border-black/10 bg-white p-3'
+              className='min-w-[280px] max-w-[280px] rounded-2xl border border-[#23252a] bg-[#0f1011] p-3'
             >
-              <div className='h-6 w-24 rounded bg-zinc-100' />
+              <div className='h-6 w-24 rounded bg-[#141516]' />
               <div className='mt-3 space-y-3'>
-                <div className='h-20 rounded-xl bg-zinc-50' />
-                <div className='h-20 rounded-xl bg-zinc-50' />
+                <div className='h-20 rounded-xl bg-[#141516]' />
+                <div className='h-20 rounded-xl bg-[#141516]' />
               </div>
             </section>
           ))}
@@ -158,7 +158,7 @@ export function KanbanBoard() {
       <button
         type='button'
         onClick={openCreate}
-        className='fixed right-6 bottom-6 z-10 flex h-[52px] items-center gap-2 rounded-2xl bg-[#6366F1] px-5 text-[16px] font-extrabold text-white shadow-[0_12px_0_rgba(79,70,229,0.12)] hover:bg-[#4F46E5]'
+        className='fixed right-6 bottom-6 z-10 flex h-[52px] items-center gap-2 rounded-2xl bg-[#5e6ad2] px-5 text-[16px] font-extrabold text-white shadow-[0_12px_0_rgba(94,106,210,0.12)] hover:bg-[#828fff]'
         aria-label='Add job'
         title='Add job'
       >

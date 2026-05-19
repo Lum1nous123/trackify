@@ -60,16 +60,16 @@ const HelpIcon = () => (
 
 export function AnalyticsShell({ children }: AnalyticsShellProps) {
   return (
-    <div className='min-h-screen bg-[#F8FAFC]'>
+    <div className='min-h-screen bg-[#0f1011]'>
       <SidebarNav />
 
       <div className='flex min-h-screen flex-col ml-[260px]'>
-        <header className='sticky top-0 z-10 flex h-[64px] items-center justify-between gap-4 border-b border-black/5 bg-[#F8FAFC] px-8'>
+        <header className='sticky top-0 z-10 flex h-[64px] items-center justify-between gap-4 border-b border-[#23252a] bg-[#0f1011] px-8'>
           <div className='min-w-0'>
-            <div className='text-[18px] font-bold tracking-tight text-zinc-900'>
+            <div className='text-[18px] font-bold tracking-tight text-[#f7f8f8]'>
               Analytics
             </div>
-            <div className='mt-1 text-[12px] font-medium text-zinc-500'>
+            <div className='mt-1 text-[12px] font-medium text-[#d0d6e0]'>
               Track your job search performance
             </div>
           </div>
@@ -77,7 +77,7 @@ export function AnalyticsShell({ children }: AnalyticsShellProps) {
           <div className='flex items-center gap-3'>
             <button
               type='button'
-              className='rounded-full border border-black/10 bg-white px-4 py-2 text-[12px] font-semibold text-zinc-700 hover:bg-black/5'
+              className='rounded-full border border-[#23252a] bg-[#141516] px-4 py-2 text-[12px] font-semibold text-[#d0d6e0] hover:bg-[#141516]/80'
               aria-label='Select time range'
             >
               Last 30 days
@@ -85,7 +85,7 @@ export function AnalyticsShell({ children }: AnalyticsShellProps) {
 
             <button
               type='button'
-              className='rounded-full border border-black/10 bg-white p-2 hover:bg-black/5'
+              className='rounded-full border border-[#23252a] bg-[#141516] p-2 hover:bg-[#141516]/80'
               aria-label='Notifications'
             >
               <BellIcon />
@@ -93,7 +93,7 @@ export function AnalyticsShell({ children }: AnalyticsShellProps) {
 
             <button
               type='button'
-              className='rounded-full border border-black/10 bg-white p-2 hover:bg-black/5'
+              className='rounded-full border border-[#23252a] bg-[#141516] p-2 hover:bg-[#141516]/80'
               aria-label='Help'
             >
               <HelpIcon />

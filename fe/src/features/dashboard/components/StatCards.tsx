@@ -48,20 +48,20 @@ export function StatCards({ stats }: { stats: DashboardStat[] }) {
         return (
           <article
             key={s.key}
-            className={`group relative overflow-hidden rounded-2xl bg-white p-5 ring-1 ring-black/5 shadow-[3px_3px_0_rgba(0,0,0,0.06)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_rgba(0,0,0,0.06)]`}
+            className={`group relative overflow-hidden rounded-2xl bg-[#0f1011] border border-[#23252a] p-5 ring-1 ring-[#23252a]/60 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)] transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-[0_1px_0_rgba(35,37,42,0.60),0_12px_35px_rgba(0,0,0,0.24)]`}
           >
             <div className='flex items-start justify-between gap-3'>
               <div className='min-w-0'>
-                <div className='text-[11px] font-extrabold tracking-widest text-zinc-600'>
+                <div className='text-[11px] font-extrabold tracking-widest text-[#d0d6e0]'>
                   {s.title}
                 </div>
                 <div className='mt-2 flex items-baseline gap-2'>
-                  <div className='text-[40px] font-black leading-none tracking-tight text-black'>
+                  <div className='text-[40px] font-black leading-none tracking-tight text-[#f7f8f8]'>
                     {s.value}
                   </div>
                 </div>
                 {s.deltaText ? (
-                  <div className='mt-2 text-[12px] font-medium text-zinc-500'>
+                  <div className='mt-2 text-[12px] font-medium text-[#8a8f98]'>
                     <span
                       className={`inline-flex items-center gap-1 ${a.text}`}
                     >

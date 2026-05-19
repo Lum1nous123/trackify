@@ -284,7 +284,7 @@ export function JobCreateEditModal({
   }, [watch]);
 
   const aiBadge = (
-    <span className='inline-flex items-center gap-1 rounded-md bg-indigo-600/10 px-2 py-1 text-[11px] font-extrabold text-[#4f46e5] ring-1 ring-[#4f46e5]/20'>
+    <span className='inline-flex items-center gap-1 rounded-md bg-[#5e6ad2]/10 px-2 py-1 text-[11px] font-extrabold text-[#5e6ad2] ring-1 ring-[#5e6ad2]/20'>
       <Sparkles
         size={12}
         aria-hidden='true'
@@ -428,16 +428,16 @@ export function JobCreateEditModal({
         role='dialog'
         aria-modal='true'
         aria-label={title}
-        className='w-full max-w-[720px] overflow-hidden rounded-2xl bg-white shadow-[0_24px_48px_rgba(0,0,0,0.12)]'
+        className='w-full max-w-[720px] overflow-hidden rounded-2xl bg-[#0f1011] border border-[#23252a] shadow-[0_24px_48px_rgba(0,0,0,0.35)]'
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className='max-h-[90vh] overflow-y-auto'>
-            <div className='relative border-b border-zinc-200 px-6 py-5'>
+            <div className='relative border-b border-[#23252a] px-6 py-5'>
               <button
                 type='button'
                 aria-label='Close'
                 onClick={onClose}
-                className='absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-xl text-zinc-600 hover:bg-zinc-100'
+                className='absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-xl text-[#d0d6e0] hover:bg-[#141516]'
               >
                 <X
                   size={18}
@@ -446,19 +446,19 @@ export function JobCreateEditModal({
               </button>
 
               <div className='flex items-start gap-3 pr-10'>
-                <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-600/10 ring-1 ring-indigo-500/20'>
+                <div className='flex h-10 w-10 items-center justify-center rounded-2xl bg-[#5e6ad2]/10 ring-1 ring-[#5e6ad2]/20'>
                   <Building2
                     size={18}
                     aria-hidden='true'
-                    className='text-[#4f46e5]'
+                    className='text-[#5e6ad2]'
                   />
                 </div>
 
                 <div className='min-w-0'>
-                  <div className='text-[18px] font-extrabold tracking-tight text-zinc-900'>
+                  <div className='text-[18px] font-extrabold tracking-tight text-[#f7f8f8]'>
                     {title}
                   </div>
-                  <div className='mt-1 text-[13px] font-semibold text-zinc-400'>
+                  <div className='mt-1 text-[13px] font-semibold text-[#d0d6e0]'>
                     {isEdit
                       ? "Update job details (status via drag & drop)"
                       : "Paste job URL first. If scraping fails, we’ll switch to manual input."}
@@ -546,7 +546,7 @@ export function JobCreateEditModal({
                       <div className='text-[12px] font-extrabold text-zinc-700'>
                         Status
                       </div>
-                      <div className='inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-[12px] font-extrabold text-[#4f46e5] ring-1 ring-[#4f46e5]/10'>
+                      <div className='inline-flex items-center gap-2 rounded-full bg-[#5e6ad2]/10 px-3 py-1 text-[12px] font-extrabold text-[#5e6ad2] ring-1 ring-[#5e6ad2]/20'>
                         {card?.status ? (
                           <span>{card.status}</span>
                         ) : (
@@ -595,7 +595,7 @@ export function JobCreateEditModal({
                     </div>
 
                     {showAiBanner ? (
-                      <div className='mt-3 rounded-xl bg-indigo-600/10 px-4 py-3 ring-1 ring-[#4f46e5]/20 text-[12px] font-extrabold text-[#4f46e5] inline-flex items-center gap-2'>
+                      <div className='mt-3 rounded-xl bg-[#5e6ad2]/10 px-4 py-3 ring-1 ring-[#5e6ad2]/20 text-[12px] font-extrabold text-[#5e6ad2] inline-flex items-center gap-2'>
                         <Plus
                           size={16}
                           aria-hidden='true'
@@ -1000,8 +1000,8 @@ export function JobCreateEditModal({
                     updateJob.isPending
                   }
                   className={[
-                    "h-[38px] rounded-xl px-4 text-sm font-extrabold text-white shadow-[0_12px_0_rgba(79,70,229,0.12)] hover:bg-[#4338ca] disabled:cursor-not-allowed disabled:opacity-50",
-                    isEdit ? "bg-[#4f46e5]" : "bg-[#6366F1]",
+                    "h-[38px] rounded-xl px-4 text-sm font-extrabold text-white shadow-[0_12px_0_rgba(94,106,210,0.12)] hover:bg-[#828fff] disabled:cursor-not-allowed disabled:opacity-50",
+                    "bg-[#5e6ad2]",
                   ].join(" ")}
                 >
                   <span className='inline-flex items-center gap-2'>

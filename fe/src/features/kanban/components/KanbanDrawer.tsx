@@ -46,10 +46,10 @@ function ProgressRing({ percent, tint }: { percent: number; tint: Tint }) {
       </svg>
 
       <div className='absolute inset-0 flex flex-col items-center justify-center'>
-        <div className='text-[44px] font-black leading-none text-zinc-900'>
+        <div className='text-[44px] font-black leading-none text-[#f7f8f8]'>
           {p}%
         </div>
-        <div className='mt-2 text-[12px] font-bold tracking-widest text-zinc-500'>
+        <div className='mt-2 text-[12px] font-bold tracking-widest text-[#d0d6e0]'>
           MATCH
         </div>
       </div>
@@ -59,7 +59,7 @@ function ProgressRing({ percent, tint }: { percent: number; tint: Tint }) {
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <div className='text-[18px] font-extrabold tracking-tight text-zinc-900'>
+    <div className='text-[18px] font-extrabold tracking-tight text-[#f7f8f8]'>
       {children}
     </div>
   );
@@ -98,7 +98,7 @@ function MissingSkillItem({ skill, tint }: { skill: string; tint: Tint }) {
       >
         !
       </span>
-      <span className='text-[16px] font-extrabold text-zinc-900'>{skill}</span>
+      <span className='text-[16px] font-extrabold text-[#f7f8f8]'>{skill}</span>
     </div>
   );
 }
@@ -145,19 +145,19 @@ export function KanbanDrawer({
     <div className='fixed inset-0 z-50'>
       <DrawerBackdrop onClose={onClose} />
 
-      <aside className='absolute right-0 top-0 flex h-full w-[480px] flex-col bg-white shadow-[0_-10px_40px_rgba(0,0,0,0.12)]'>
-        <div className='flex items-center justify-between gap-3 border-b border-zinc-200 px-6 py-4'>
+      <aside className='absolute right-0 top-0 flex h-full w-[480px] flex-col bg-[#0f1011] border border-[#23252a] shadow-[0_-10px_40px_rgba(0,0,0,0.28)]'>
+        <div className='flex items-center justify-between gap-3 border-b border-[#23252a] px-6 py-4'>
           <div className='flex items-start gap-3'>
-            <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600/10 ring-1 ring-indigo-500/20'>
-              <span className='text-[18px] font-extrabold text-[#4f46e5]'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-[#5e6ad2]/10 ring-1 ring-[#5e6ad2]/20'>
+              <span className='text-[18px] font-extrabold text-[#5e6ad2]'>
                 {card.initials}
               </span>
             </div>
             <div className='min-w-0'>
-              <div className='truncate text-[14px] font-extrabold tracking-tight text-zinc-900'>
+              <div className='truncate text-[14px] font-extrabold tracking-tight text-[#f7f8f8]'>
                 {card.company}
               </div>
-              <div className='truncate text-[12px] font-medium text-zinc-500'>
+              <div className='truncate text-[12px] font-medium text-[#d0d6e0]'>
                 {card.title}
               </div>
             </div>
@@ -166,7 +166,7 @@ export function KanbanDrawer({
           <button
             type='button'
             onClick={onClose}
-            className='h-10 w-10 rounded-xl text-zinc-700 hover:bg-black/5'
+            className='h-10 w-10 rounded-xl text-[#d0d6e0] hover:bg-black/5'
             aria-label='Close'
           >
             ✕
@@ -193,14 +193,14 @@ export function KanbanDrawer({
 
             <div className='text-center'>
               <SectionTitle> {card.matchLabel} </SectionTitle>
-              <div className='mt-2 text-[16px] font-medium text-zinc-600'>
+              <div className='mt-2 text-[16px] font-medium text-[#d0d6e0]'>
                 {card.matchSubLabel}
               </div>
             </div>
           </div>
 
           <div className='mt-8'>
-            <div className='text-[18px] font-extrabold tracking-tight text-zinc-900'>
+            <div className='text-[18px] font-extrabold tracking-tight text-[#f7f8f8]'>
               MISSING SKILLS
             </div>
 
@@ -216,7 +216,7 @@ export function KanbanDrawer({
           </div>
 
           <div className='mt-8'>
-            <div className='text-[18px] font-extrabold tracking-tight text-zinc-900'>
+            <div className='text-[18px] font-extrabold tracking-tight text-[#f7f8f8]'>
               SUGGESTED KEYWORDS
             </div>
 
@@ -233,7 +233,7 @@ export function KanbanDrawer({
           </div>
 
           <div className='mt-10'>
-            <div className='text-[22px] font-extrabold tracking-tight text-zinc-900'>
+            <div className='text-[22px] font-extrabold tracking-tight text-[#f7f8f8]'>
               ACTIVITY TIMELINE
             </div>
 
@@ -264,10 +264,10 @@ export function KanbanDrawer({
                   </div>
 
                   <div className='min-w-0 flex-1'>
-                    <div className='text-[16px] font-extrabold text-zinc-900'>
+                    <div className='text-[16px] font-extrabold text-[#f7f8f8]'>
                       {idx === 0 ? "Latest" : "Update"}
                     </div>
-                    <div className='mt-1 text-[14px] font-medium text-zinc-600'>
+                    <div className='mt-1 text-[14px] font-medium text-[#d0d6e0]'>
                       {a.text}
                     </div>
                   </div>
@@ -279,7 +279,7 @@ export function KanbanDrawer({
           <div className='mt-8 flex flex-col gap-4 pb-8'>
             <button
               type='button'
-              className='h-[56px] rounded-2xl bg-[#4f46e5] px-5 text-[18px] font-extrabold text-white shadow-[0_12px_0_rgba(79,70,229,0.12)] hover:bg-[#4338ca]'
+              className='h-[56px] rounded-2xl bg-[#5e6ad2] px-5 text-[18px] font-extrabold text-white shadow-[0_12px_0_rgba(94,106,210,0.12)] hover:bg-[#828fff]'
               onClick={() => {
                 // UI placeholder
                 // eslint-disable-next-line no-alert
@@ -291,7 +291,7 @@ export function KanbanDrawer({
 
             <button
               type='button'
-              className='h-[56px] rounded-2xl border-2 border-zinc-700/20 bg-white px-5 text-[18px] font-extrabold text-zinc-900 hover:bg-zinc-50'
+              className='h-[56px] rounded-2xl border-2 border-[#23252a] bg-[#0f1011] px-5 text-[18px] font-extrabold text-[#f7f8f8] hover:bg-[#141516]'
               onClick={() => {
                 // UI placeholder
                 // eslint-disable-next-line no-alert

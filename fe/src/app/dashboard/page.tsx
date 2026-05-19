@@ -24,6 +24,7 @@ import type {
   JobKanbanCard,
 } from "@/features/kanban/types/kanban";
 import type { Tint } from "@/features/dashboard/utils/tints";
+import { buildClearbitLogoUrl } from "@/features/kanban/utils/clearbit";
 
 const ACCESS_COOKIE_NAME = "TRACKIFY_ACCESS_TOKEN";
 
@@ -177,17 +178,37 @@ export default async function DashboardPage() {
     },
   ];
 
+  const companyLogoByName = new Map<string, string>();
+
+  for (const card of kanban?.cards ?? []) {
+    const name = card.companyName?.trim();
+    const logo = card.companyLogoUrl?.trim();
+    if (!name || !logo) continue;
+    if (!companyLogoByName.has(name)) {
+      companyLogoByName.set(name, logo);
+    }
+  }
+
   const upcomingDeadlineItems: DeadlineItem[] = upcomingDeadlines.map(
     (item) => {
       const diff = daysUntil(item.deadline);
       const companyName = item.companyName ?? "";
+      const companyNameTrimmed = companyName.trim();
       const companyInitial =
-        companyName.trim().slice(0, 1).toUpperCase() || "•";
+        companyNameTrimmed.slice(0, 1).toUpperCase() || "•";
 
       const tint = urgencyTintFromDays(diff);
+
+      const companyLogoUrl =
+        companyLogoByName.get(companyNameTrimmed) ??
+        buildClearbitLogoUrl({
+          companyName,
+        });
+
       return {
         id: item.id,
         companyInitial,
+        companyLogoUrl,
         title: companyName,
         subtitle: item.position,
         whenText: whenTextFromDays(diff),
@@ -248,11 +269,20 @@ export default async function DashboardPage() {
       const pillStatus = activity.toStatus ?? card.status;
       const stText = statusText(pillStatus);
 
+      const companyLogoUrl =
+        card.companyLogoUrl ??
+        buildClearbitLogoUrl({
+          companyLogoUrl: card.companyLogoUrl,
+          jdUrl: card.jdUrl,
+          companyName,
+        });
+
       return {
         id: activity.id,
         initials,
         name: companyName,
         company: card.position,
+        companyLogoUrl,
         statusText: stText,
         whenText: `${stText} • ${when}`,
         tint: tintFromStatus(pillStatus),
@@ -267,16 +297,16 @@ export default async function DashboardPage() {
         <div className='flex flex-col gap-6'>
           <KanbanJobsHydrationBoundary dehydratedState={dehydratedState}>
             <>
-              <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)]'>
+              <section className='col-span-12 rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.35),0_12px_35px_rgba(0,0,0,0.18)]'>
                 <AiSpotlightClient />
               </section>
 
               <div className='grid grid-cols-12 gap-6'>
-                <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-4'>
+                <section className='col-span-12 rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.35),0_12px_35px_rgba(0,0,0,0.18)] md:col-span-4'>
                   <QuickActions />
                 </section>
 
-                <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-8'>
+                <section className='col-span-12 rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.35),0_12px_35px_rgba(0,0,0,0.18)] md:col-span-8'>
                   <RecentActivity items={recentItems} />
                 </section>
               </div>

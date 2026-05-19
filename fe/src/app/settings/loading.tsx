@@ -5,13 +5,13 @@ import { DashboardShell } from "@/features/dashboard/components/DashboardShell";
 function SkeletonBlock({ className }: { className: string }) {
   return (
     <div
-      className={`animate-pulse rounded-2xl bg-black/5 ring-1 ring-black/5 ${className}`}
+      className={`animate-pulse rounded-2xl bg-[#141516] ring-1 ring-[#23252a] ${className}`}
     />
   );
 }
 
 function SkeletonLine({ className }: { className: string }) {
-  return <div className={`animate-pulse rounded bg-black/10 ${className}`} />;
+  return <div className={`animate-pulse rounded bg-[#141516] ${className}`} />;
 }
 
 export default function SettingsLoading() {
@@ -33,7 +33,7 @@ export default function SettingsLoading() {
         {/* Main grid */}
         <div className='grid grid-cols-12 gap-6'>
           {/* Left card */}
-          <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-4'>
+          <section className='col-span-12 rounded-2xl bg-[#0f1011] p-6 border border-[#23252a] shadow-[0_24px_48px_rgba(0,0,0,0.25)] md:col-span-4'>
             <div className='flex items-center justify-between gap-4'>
               <div className='flex items-center gap-4'>
                 <SkeletonBlock className='h-[52px] w-[52px] rounded-full shadow-none' />
@@ -76,7 +76,7 @@ export default function SettingsLoading() {
             <div className='mt-7'>
               <SkeletonLine className='h-[14px] w-[90px]' />
 
-              <div className='mt-4 rounded-2xl border border-dashed border-zinc-200 bg-zinc-50 p-4'>
+              <div className='mt-4 rounded-2xl border border-dashed border-[#23252a] bg-[#0f1011] p-4'>
                 <SkeletonLine className='h-[12px] w-[130px]' />
                 <SkeletonLine className='mt-2 h-[12px] w-[220px]' />
 
@@ -86,14 +86,14 @@ export default function SettingsLoading() {
           </section>
 
           {/* Right card */}
-          <section className='col-span-12 rounded-2xl bg-white p-6 shadow-[0_1px_0_rgba(15,23,42,0.04),0_12px_35px_rgba(15,23,42,0.06)] md:col-span-8'>
+          <section className='col-span-12 rounded-2xl bg-[#0f1011] p-6 border border-[#23252a] shadow-[0_24px_48px_rgba(0,0,0,0.25)] md:col-span-8'>
             <div className='flex flex-col gap-4'>
               {/* Tabs */}
-              <div className='flex flex-wrap gap-3 border-b border-zinc-200 pb-3'>
+              <div className='flex flex-wrap gap-3 border-b border-[#23252a] pb-3'>
                 {Array.from({ length: 4 }).map((_, idx) => (
                   <div
                     key={idx}
-                    className='h-[14px] w-[120px] animate-pulse rounded bg-black/10'
+                    className='h-[14px] w-[120px] animate-pulse rounded bg-[#141516]'
                   />
                 ))}
               </div>
@@ -109,7 +109,7 @@ export default function SettingsLoading() {
                   {Array.from({ length: 4 }).map((_, idx) => (
                     <div
                       key={idx}
-                      className='flex items-start justify-between gap-4 rounded-xl border border-zinc-100 p-3'
+                      className='flex items-start justify-between gap-4 rounded-xl border border-[#23252a] p-3'
                     >
                       <div className='flex-1'>
                         <SkeletonLine className='h-[12px] w-[180px]' />
