@@ -66,6 +66,9 @@ public class Job {
   @Column(name = "deadline")
   private LocalDate deadline;
 
+  @Column(name = "interview_at")
+  private LocalDate interviewAt;
+
   @Column(name = "company_logo_url")
   private String companyLogoUrl;
 

@@ -21,6 +21,8 @@ public class JobKanbanCardResponse {
 
     private LocalDate deadline;
 
+    private LocalDate interviewAt;
+
     private String companyLogoUrl;
 
     private Instant createdAt;
@@ -88,6 +90,14 @@ public class JobKanbanCardResponse {
 
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
+    }
+
+    public LocalDate getInterviewAt() {
+        return interviewAt;
+    }
+
+    public void setInterviewAt(LocalDate interviewAt) {
+        this.interviewAt = interviewAt;
     }
 
     public String getCompanyLogoUrl() {

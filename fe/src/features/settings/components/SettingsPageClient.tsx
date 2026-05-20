@@ -7,6 +7,11 @@ import { DashboardShell } from "@/features/dashboard/components/DashboardShell";
 import { useCvActive } from "@/hooks/useCvActive";
 import { useCvUpload } from "@/hooks/useCvUpload";
 import { useMe, useUpdateMe } from "@/hooks/useAuth";
+import {
+  useReminderSettings,
+  useUpsertReminderSettings,
+} from "@/hooks/useReminderSettings";
+import { useReminderLogs } from "@/hooks/useReminderLogs";
 
 function Toggle({
   checked,
@@ -174,6 +179,47 @@ export function SettingsPageClient() {
   const cvUpload = useCvUpload();
   const { data: cvActive, isLoading: isCvActiveLoading } = useCvActive();
 
+  const REMINDER_RULES = useMemo(
+    () => ({
+      deadline: {
+        jobStatus: "SAVED",
+        reminderType: "DEADLINE_REMINDER",
+        startOffsetDays: 3,
+        endOffsetDays: 0,
+        frequencyDays: 1,
+      },
+      followUp: {
+        jobStatus: "APPLIED",
+        reminderType: "FOLLOW_UP_APPLIED",
+        startOffsetDays: 7,
+        endOffsetDays: 14,
+        frequencyDays: 1,
+      },
+      interview: {
+        jobStatus: "INTERVIEW",
+        reminderType: "INTERVIEW_PREP",
+        startOffsetDays: 2,
+        endOffsetDays: 0,
+        frequencyDays: 1,
+      },
+    }),
+    [],
+  );
+
+  // MVP (option 1): user chỉnh 1 số X => backend sẽ nhắc theo X ngày trước deadline
+  // => startOffsetDays = endOffsetDays = X
+  const [deadlineReminderDays, setDeadlineReminderDays] = useState<number>(
+    () => REMINDER_RULES.deadline.startOffsetDays,
+  );
+
+  const { data: reminderSettings, isLoading: isReminderSettingsLoading } =
+    useReminderSettings();
+
+  const upsertReminderSettings = useUpsertReminderSettings();
+
+  const { data: reminderLogs, isLoading: isReminderLogsLoading } =
+    useReminderLogs(8);
+
   const displayName = useMemo(() => {
     return me?.fullName?.trim() || me?.username || "User";
   }, [me?.fullName, me?.username]);
@@ -221,6 +267,53 @@ export function SettingsPageClient() {
     aiPreferences: true,
     salaryInsights: false,
   });
+
+  useEffect(() => {
+    if (!reminderSettings) return;
+
+    const findRule = (jobStatus: string, reminderType: string) =>
+      reminderSettings.find(
+        (r) =>
+          String(r.jobStatus) === String(jobStatus) &&
+          r.reminderType === reminderType,
+      );
+
+    const deadlineRule = findRule(
+      REMINDER_RULES.deadline.jobStatus,
+      REMINDER_RULES.deadline.reminderType,
+    );
+
+    const deadlineEnabled = deadlineRule?.enabled;
+
+    // MVP (option 1): if startOffsetDays === endOffsetDays => X
+    const deadlineDays =
+      deadlineRule &&
+      deadlineRule.startOffsetDays !== undefined &&
+      deadlineRule.endOffsetDays !== undefined &&
+      deadlineRule.startOffsetDays === deadlineRule.endOffsetDays
+        ? deadlineRule.startOffsetDays
+        : (deadlineRule?.startOffsetDays ??
+          REMINDER_RULES.deadline.startOffsetDays);
+
+    setDeadlineReminderDays(deadlineDays);
+
+    const followUpEnabled = findRule(
+      REMINDER_RULES.followUp.jobStatus,
+      REMINDER_RULES.followUp.reminderType,
+    )?.enabled;
+
+    const interviewEnabled = findRule(
+      REMINDER_RULES.interview.jobStatus,
+      REMINDER_RULES.interview.reminderType,
+    )?.enabled;
+
+    setToggles((s) => ({
+      ...s,
+      deadlineReminders: deadlineEnabled ?? false,
+      followUp: followUpEnabled ?? false,
+      interviewAlerts: interviewEnabled ?? false,
+    }));
+  }, [reminderSettings, REMINDER_RULES]);
 
   const onPickAvatarClick = () => fileInputRef.current?.click();
   const onPickCvClick = () => cvFileInputRef.current?.click();
@@ -549,12 +642,83 @@ export function SettingsPageClient() {
                           Go to the next alert hours before an application
                           deadline.
                         </div>
+
+                        <div className='mt-3 flex items-center gap-2'>
+                          <div className='text-[12px] font-semibold text-[#d0d6e0]'>
+                            Nhắc me
+                          </div>
+
+                          <input
+                            type='number'
+                            inputMode='numeric'
+                            min={0}
+                            max={60}
+                            disabled={
+                              upsertReminderSettings.isPending ||
+                              !toggles.deadlineReminders
+                            }
+                            value={deadlineReminderDays}
+                            onChange={(e) => {
+                              const raw = Number(e.target.value);
+                              const next = Number.isFinite(raw)
+                                ? Math.max(0, Math.min(60, Math.trunc(raw)))
+                                : 0;
+                              setDeadlineReminderDays(next);
+                            }}
+                            onBlur={() => {
+                              if (!toggles.deadlineReminders) return;
+                              if (upsertReminderSettings.isPending) return;
+
+                              upsertReminderSettings.mutateAsync([
+                                {
+                                  jobStatus: REMINDER_RULES.deadline.jobStatus,
+                                  reminderType:
+                                    REMINDER_RULES.deadline.reminderType,
+                                  enabled: true,
+                                  startOffsetDays: deadlineReminderDays,
+                                  endOffsetDays: deadlineReminderDays,
+                                  frequencyDays:
+                                    REMINDER_RULES.deadline.frequencyDays,
+                                },
+                              ]);
+                            }}
+                            className={[
+                              "h-[38px] w-[88px] rounded-xl border bg-[#0f1011] px-3 text-sm text-[#f7f8f8] outline-none",
+                              upsertReminderSettings.isPending ||
+                              !toggles.deadlineReminders
+                                ? "border-[#23252a] text-[#8a8f98] opacity-60 cursor-not-allowed"
+                                : "border-[#23252a] focus:border-[#5e6ad2]/60 focus:ring-1 focus:ring-[#5e6ad2]/20",
+                            ].join(" ")}
+                          />
+
+                          <div className='text-[12px] font-semibold text-[#d0d6e0]'>
+                            ngày trước
+                          </div>
+                        </div>
                       </div>
+
                       <Toggle
                         checked={toggles.deadlineReminders}
-                        onChange={(next) =>
-                          setToggles((s) => ({ ...s, deadlineReminders: next }))
-                        }
+                        disabled={upsertReminderSettings.isPending}
+                        onChange={(next) => {
+                          setToggles((s) => ({
+                            ...s,
+                            deadlineReminders: next,
+                          }));
+
+                          upsertReminderSettings.mutateAsync([
+                            {
+                              jobStatus: REMINDER_RULES.deadline.jobStatus,
+                              reminderType:
+                                REMINDER_RULES.deadline.reminderType,
+                              enabled: next,
+                              startOffsetDays: deadlineReminderDays,
+                              endOffsetDays: deadlineReminderDays,
+                              frequencyDays:
+                                REMINDER_RULES.deadline.frequencyDays,
+                            },
+                          ]);
+                        }}
                       />
                     </div>
 
@@ -570,9 +734,25 @@ export function SettingsPageClient() {
                       </div>
                       <Toggle
                         checked={toggles.followUp}
-                        onChange={(next) =>
-                          setToggles((s) => ({ ...s, followUp: next }))
-                        }
+                        disabled={upsertReminderSettings.isPending}
+                        onChange={(next) => {
+                          setToggles((s) => ({ ...s, followUp: next }));
+
+                          upsertReminderSettings.mutateAsync([
+                            {
+                              jobStatus: REMINDER_RULES.followUp.jobStatus,
+                              reminderType:
+                                REMINDER_RULES.followUp.reminderType,
+                              enabled: next,
+                              startOffsetDays:
+                                REMINDER_RULES.followUp.startOffsetDays,
+                              endOffsetDays:
+                                REMINDER_RULES.followUp.endOffsetDays,
+                              frequencyDays:
+                                REMINDER_RULES.followUp.frequencyDays,
+                            },
+                          ]);
+                        }}
                       />
                     </div>
 
@@ -605,13 +785,73 @@ export function SettingsPageClient() {
                       </div>
                       <Toggle
                         checked={toggles.interviewAlerts}
-                        onChange={(next) =>
+                        disabled={upsertReminderSettings.isPending}
+                        onChange={(next) => {
                           setToggles((s) => ({
                             ...s,
                             interviewAlerts: next,
-                          }))
-                        }
+                          }));
+
+                          upsertReminderSettings.mutateAsync([
+                            {
+                              jobStatus: REMINDER_RULES.interview.jobStatus,
+                              reminderType:
+                                REMINDER_RULES.interview.reminderType,
+                              enabled: next,
+                              startOffsetDays:
+                                REMINDER_RULES.interview.startOffsetDays,
+                              endOffsetDays:
+                                REMINDER_RULES.interview.endOffsetDays,
+                              frequencyDays:
+                                REMINDER_RULES.interview.frequencyDays,
+                            },
+                          ]);
+                        }}
                       />
+                    </div>
+                    <div className='mt-6'>
+                      <div className='text-[13px] font-extrabold text-[#f7f8f8]'>
+                        Recent reminders
+                      </div>
+                      <div className='mt-1 text-[12px] text-[#d0d6e0]'>
+                        Latest reminder triggers (history / dedupe).
+                      </div>
+
+                      <div className='mt-3 flex flex-col gap-2'>
+                        {isReminderLogsLoading ? (
+                          <div className='text-[12px] text-[#8a8f98]'>
+                            Loading…
+                          </div>
+                        ) : null}
+
+                        {!isReminderLogsLoading &&
+                        reminderLogs &&
+                        reminderLogs.length > 0
+                          ? reminderLogs.map((log) => (
+                              <div
+                                key={log.id}
+                                className='rounded-xl border border-[#23252a] bg-[#0f1011] p-3'
+                              >
+                                <div className='text-[12px] font-extrabold text-[#f7f8f8]'>
+                                  {log.reminderType}
+                                </div>
+                                <div className='mt-1 text-[12px] text-[#d0d6e0]'>
+                                  Trigger: {log.triggerDate}
+                                </div>
+                                <div className='mt-1 text-[12px] text-[#8a8f98]'>
+                                  Sent: {formatTimeAgo(log.sentAt)}
+                                </div>
+                              </div>
+                            ))
+                          : null}
+
+                        {!isReminderLogsLoading &&
+                        (!reminderLogs || reminderLogs.length === 0) ? (
+                          <div className='text-[12px] text-[#8a8f98]'>
+                            No reminders yet.
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   </div>
                 </div>

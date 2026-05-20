@@ -1,30 +1,8 @@
-springdotenv:
-  enabled: true
-  directory: .
-  filename: .env
-  ignoreIfMissing: true
-
 spring:
+  profiles:
+    active: local
   application:
     name: trackify
-
-  ai:
-    google:
-      genai:
-        api-key: "AIzaSyDo5rPdVb6s8WJ_qwrXPZnO515e7N8aHwo"
-        chat:
-          enable-cached-content: false
-          options:
-            model: gemini-2.5-flash
-            temperature: 0.7
-            max-output-tokens: 8192
-
-  datasource:
-    url: jdbc:postgresql://aws-1-ap-south-1.pooler.supabase.com:5432/postgres
-    username: postgres.tuqobhixvhybfmvldlnc
-    password: z01659898459z
-    driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -33,25 +11,3 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-
-trackify:
-  jwt:
-    # Hardcoded for local/dev: derived 256-bit HS256 secrets (>=256 bits)
-    # from your be/trackify/.env values, to satisfy JwtService key-length checks.
-    access-secret: -2nCdvFnb83XoncrEId4uwL09buPBwJNDygAyxqdDQI
-    refresh-secret: 0bWPfBWLopDcjR3wuVYikzYflerio5DXGZe8pVpIVm4
-
-    # access ~15 phút, refresh ~14 ngày (ms)
-    access-expiration-ms: ${TRACKIFY_JWT_ACCESS_EXPIRATION_MS:900000}
-    refresh-expiration-ms: ${TRACKIFY_JWT_REFRESH_EXPIRATION_MS:1209600000}
-
-    access-cookie-name: TRACKIFY_ACCESS_TOKEN
-    refresh-cookie-name: TRACKIFY_REFRESH_TOKEN
-
-    # Khi chạy local bạn có thể để false; prod nên bật true
-    cookie-secure: ${TRACKIFY_JWT_COOKIE_SECURE:false}
-
-cloudinary:
-  api-key: 647625272691861
-  api-secret: 3TgR9iXEmN8u4xF8sdhGO0nYC5E
-  cloud-name: dmnfscquv

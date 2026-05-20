@@ -8,6 +8,13 @@ import { axiosClient } from "@/core/http/axiosClient";
 import { useMe } from "@/hooks/useAuth";
 import LogoSvg from "@/app/logo/LogoSvg";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  BarChart3,
+  FileText,
+  KanbanSquare,
+  LayoutDashboard,
+  Settings,
+} from "lucide-react";
 
 const NavItemIcon = ({
   kind,
@@ -16,87 +23,26 @@ const NavItemIcon = ({
   kind: "dashboard" | "kanban" | "applications" | "analytics" | "settings";
   active?: boolean;
 }) => {
-  const stroke = active ? "#ffffff" : "#5e6ad2";
+  const color = active ? "#ffffff" : "#5e6ad2";
+
   const common = {
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    stroke,
+    size: 18,
     strokeWidth: 1.8,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
+    color,
     "aria-hidden": true,
-  };
+  } as const;
 
   switch (kind) {
     case "dashboard":
-      return (
-        <svg
-          width='18'
-          height='18'
-          viewBox='0 0 24 24'
-          {...common}
-        >
-          <path d='M4 13V5a2 2 0 0 1 2-2h4v10H4Z' />
-          <path d='M14 3h4a2 2 0 0 1 2 2v6h-6V3Z' />
-          <path d='M4 21a2 2 0 0 1 2-2h4v4H6a2 2 0 0 1-2-2Z' />
-          <path d='M14 15h6v4a2 2 0 0 1-2 2h-4v-6Z' />
-        </svg>
-      );
+      return <LayoutDashboard {...common} />;
     case "kanban":
-      return (
-        <svg
-          width='18'
-          height='18'
-          viewBox='0 0 24 24'
-          {...common}
-        >
-          <path d='M4 6h16' />
-          <path d='M7 6v15' />
-          <path d='M12 6v15' />
-          <path d='M17 6v15' />
-        </svg>
-      );
+      return <KanbanSquare {...common} />;
     case "applications":
-      return (
-        <svg
-          width='18'
-          height='18'
-          viewBox='0 0 24 24'
-          {...common}
-        >
-          <path d='M8 6h13' />
-          <path d='M8 12h13' />
-          <path d='M8 18h13' />
-          <path d='M3 6h.01' />
-          <path d='M3 12h.01' />
-          <path d='M3 18h.01' />
-        </svg>
-      );
+      return <FileText {...common} />;
     case "analytics":
-      return (
-        <svg
-          width='18'
-          height='18'
-          viewBox='0 0 24 24'
-          {...common}
-        >
-          <path d='M4 19V5' />
-          <path d='M4 19h16' />
-          <path d='M8 15l3-3 3 2 5-7' />
-        </svg>
-      );
+      return <BarChart3 {...common} />;
     case "settings":
-      return (
-        <svg
-          width='18'
-          height='18'
-          viewBox='0 0 24 24'
-          {...common}
-        >
-          <path d='M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z' />
-          <path d='M19.4 15a1.8 1.8 0 0 0 .4 2l.1.1a2 2 0 0 1-1.4 3.4 2 2 0 0 1-1.5-.6l-.1-.1a1.8 1.8 0 0 0-2-.4 1.8 1.8 0 0 0-1 1.7V23a2 2 0 0 1-4 0v-.1a1.8 1.8 0 0 0-1-1.7 1.8 1.8 0 0 0-2 .4l-.1.1a2 2 0 0 1-2.8-2.8l.1-.1a1.8 1.8 0 0 0 .4-2 1.8 1.8 0 0 0-1.7-1H1a2 2 0 0 1 0-4h.1a1.8 1.8 0 0 0 1.7-1 1.8 1.8 0 0 0-.4-2l-.1-.1A2 2 0 0 1 5.1 2.5l.1.1a1.8 1.8 0 0 0 2 .4 1.8 1.8 0 0 0 1-1.7V1a2 2 0 0 1 4 0v.1a1.8 1.8 0 0 0 1 1.7 1.8 1.8 0 0 0 2-.4l.1-.1a2 2 0 0 1 2.8 2.8l-.1.1a1.8 1.8 0 0 0-.4 2 1.8 1.8 0 0 0 1.7 1H23a2 2 0 0 1 0 4h-.1a1.8 1.8 0 0 0-1.7 1Z' />
-        </svg>
-      );
+      return <Settings {...common} />;
     default:
       return null;
   }

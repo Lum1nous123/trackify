@@ -2,9 +2,6 @@
 
 import React from "react";
 import type { JobKanbanCard } from "@/features/kanban/types/kanban";
-import { TINTS, type Tint } from "../utils/tints";
-
-type StatusKey = JobKanbanCard["status"];
 
 function toLocalMidnight(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -32,21 +29,43 @@ function statusText(status: string): string {
   return status;
 }
 
-function tintFromStatus(status: StatusKey): Tint {
-  if (status === "APPLIED") return "violet";
-  if (status === "INTERVIEW") return "indigo";
-  if (status === "OFFER") return "amber";
-  if (status === "REJECT") return "amber";
-  return "cyan";
-}
+type PanelColorKey = "lowMatch" | "gaps" | "soonRisk";
 
-function pillFor(tint: Tint) {
-  const t = TINTS[tint];
+type PanelPill = {
+  text: string;
+  ring: string;
+  bgSoft: string;
+  border: string;
+};
+
+const PANEL_COLORS: Record<PanelColorKey, { accentHex: string }> = {
+  lowMatch: { accentHex: "#E05252" }, // Red-orange
+  gaps: { accentHex: "#D4A017" }, // Amber
+  soonRisk: { accentHex: "#E07B39" }, // Orange
+};
+
+function pillForAccent(accentHex: string): PanelPill {
+  if (accentHex === "#E05252") {
+    return {
+      text: "text-[#E05252]",
+      ring: "ring-[#E05252]/20",
+      bgSoft: "bg-[#E05252]/10",
+      border: "border-[#E05252]/40",
+    };
+  }
+  if (accentHex === "#D4A017") {
+    return {
+      text: "text-[#D4A017]",
+      ring: "ring-[#D4A017]/20",
+      bgSoft: "bg-[#D4A017]/10",
+      border: "border-[#D4A017]/40",
+    };
+  }
   return {
-    text: t.text,
-    ring: t.ring,
-    bgSoft: t.bgSoft,
-    border: t.border,
+    text: "text-[#E07B39]",
+    ring: "ring-[#E07B39]/20",
+    bgSoft: "bg-[#E07B39]/10",
+    border: "border-[#E07B39]/40",
   };
 }
 
@@ -57,6 +76,14 @@ function initialsFromCompany(companyName?: string | null) {
 
 function formatMatch(matchScore?: number | null) {
   return typeof matchScore === "number" ? `${matchScore}%` : "No AI";
+}
+
+function matchBarColors(matchScore: number): { fill: string; track: string } {
+  if (matchScore <= 20)
+    return { fill: "#FF4D4F", track: "rgba(255, 77, 79, 0.18)" };
+  if (matchScore <= 60)
+    return { fill: "#FAAD14", track: "rgba(250, 173, 20, 0.18)" };
+  return { fill: "#52C41A", track: "rgba(82, 196, 26, 0.18)" };
 }
 
 function clampMissingSkills(skills: string[] | null | undefined) {
@@ -103,20 +130,109 @@ function sortSoonRisk(cards: JobKanbanCard[]) {
   });
 }
 
+function getTabAccentHex(tab: TabKey): string {
+  if (tab === "lowMatch") return PANEL_COLORS.lowMatch.accentHex;
+  if (tab === "gaps") return PANEL_COLORS.gaps.accentHex;
+  return PANEL_COLORS.soonRisk.accentHex;
+}
+
+function TabButton({
+  tab,
+  activeTab,
+  onSelect,
+}: {
+  tab: TabKey;
+  activeTab: TabKey;
+  onSelect: (tab: TabKey) => void;
+}) {
+  const accentHex = getTabAccentHex(tab);
+  const active = tab === activeTab;
+
+  const className = active
+    ? "rounded-xl border bg-white/5 px-3 py-1.5 text-[12px] font-extrabold text-white"
+    : "rounded-xl border border-[#23252a] bg-[#0f1011] px-3 py-1.5 text-[12px] font-extrabold text-[#d0d6e0] hover:bg-white/5";
+
+  return (
+    <button
+      type='button'
+      className={className}
+      style={active ? { borderColor: accentHex } : undefined}
+      onClick={() => onSelect(tab)}
+    >
+      {tab === "lowMatch"
+        ? "LOW MATCH"
+        : tab === "gaps"
+          ? "GAPS"
+          : "SOON + RISK"}
+    </button>
+  );
+}
+
+type TabKey = "lowMatch" | "gaps" | "soonRisk";
+
+function AiSpotlightSkeleton() {
+  // Reuse the same “dashboard loading” look & feel (animate-pulse blocks)
+  return (
+    <section className='rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'>
+      <div className='flex items-start justify-between gap-4'>
+        <div className='min-w-0'>
+          <div className='h-5 w-[45%] animate-pulse rounded bg-white/15' />
+          <div className='mt-2 h-[14px] w-[60%] animate-pulse rounded bg-white/10' />
+        </div>
+        <div className='h-9 w-[90px] animate-pulse rounded-xl bg-white/5' />
+      </div>
+
+      <div className='mt-5 flex items-center gap-3'>
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <div
+            key={idx}
+            className='h-[34px] w-[132px] animate-pulse rounded-xl bg-white/5'
+          />
+        ))}
+      </div>
+
+      <div className='mt-5 grid grid-cols-1 gap-4'>
+        <div className='rounded-2xl bg-[#0f1011] p-4 shadow-[0_1px_0_rgba(35,37,42,0.30)] border border-[#23252a]'>
+          <div className='h-4 w-[70%] animate-pulse rounded bg-white/10' />
+          <div className='mt-2 h-3 w-[55%] animate-pulse rounded bg-white/10' />
+          <div className='mt-4 space-y-3'>
+            {Array.from({ length: 3 }).map((_, idx) => (
+              <div
+                key={idx}
+                className='flex items-start justify-between gap-3 rounded-xl border border-[#23252a] bg-[#0f1011] p-3'
+              >
+                <div className='flex items-start gap-3 min-w-0'>
+                  <div className='h-12 w-12 animate-pulse rounded-2xl bg-white/5' />
+                  <div className='min-w-0'>
+                    <div className='h-3 w-[140px] animate-pulse rounded bg-white/10' />
+                    <div className='mt-2 h-3 w-[110px] animate-pulse rounded bg-white/10' />
+                  </div>
+                </div>
+                <div className='h-7 w-[92px] animate-pulse rounded-full bg-white/5' />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function MiniPanel({
   title,
   subtitle,
-  tint,
+  panelKey,
   items,
   variant,
 }: {
   title: string;
   subtitle: string;
-  tint: Tint;
+  panelKey: PanelColorKey;
   variant: "lowMatch" | "gaps" | "soonRisk";
   items: JobKanbanCard[];
 }) {
-  const panelPill = pillFor(tint);
+  const panel = PANEL_COLORS[panelKey];
+  const panelPill = pillForAccent(panel.accentHex);
 
   return (
     <div className='rounded-2xl border border-[#23252a] bg-[#0f1011] p-4'>
@@ -131,6 +247,7 @@ function MiniPanel({
             {subtitle}
           </div>
         </div>
+
         <div
           className={`shrink-0 rounded-full px-3 py-1 text-[12px] font-extrabold ${panelPill.text} ring-1 ${panelPill.ring} ${panelPill.bgSoft}`}
           aria-hidden='true'
@@ -141,8 +258,7 @@ function MiniPanel({
 
       <div className='mt-4 space-y-3'>
         {items.map((card) => {
-          const tintForCard = tintFromStatus(card.status);
-          const cardPill = pillFor(tintForCard);
+          const cardPill = panelPill;
 
           const matchText = formatMatch(card.matchScore ?? null);
 
@@ -197,7 +313,7 @@ function MiniPanel({
                   </div>
 
                   <div className='min-w-0'>
-                    <div className='truncate text-[13px] font-extrabold text-zinc-900'>
+                    <div className='truncate text-[13px] font-extrabold text-[#f7f8f8]'>
                       {card.companyName || "Unknown company"}
                     </div>
                     <div className='truncate text-[12px] font-medium text-zinc-500'>
@@ -208,39 +324,60 @@ function MiniPanel({
 
                 <div className='mt-2 space-y-2'>
                   <div className='text-[12px] font-semibold text-zinc-700'>
-                    Match:{" "}
-                    <span
-                      className={
-                        typeof card.matchScore === "number"
-                          ? cardPill.text
-                          : "text-zinc-500"
-                      }
-                    >
-                      {matchText}
-                    </span>
+                    Match
+                    {typeof card.matchScore === "number" ? (
+                      <div className='mt-1 flex items-center gap-3'>
+                        <div
+                          className='h-2.5 flex-1 overflow-hidden rounded-full border'
+                          style={{
+                            backgroundColor: matchBarColors(card.matchScore)
+                              .track,
+                            borderColor: matchBarColors(card.matchScore).track,
+                          }}
+                        >
+                          <div
+                            className='h-full rounded-full'
+                            style={{
+                              width: `${Math.max(
+                                0,
+                                Math.min(100, card.matchScore),
+                              )}%`,
+                              backgroundColor: matchBarColors(card.matchScore)
+                                .fill,
+                            }}
+                          />
+                        </div>
+
+                        <div className='shrink-0 text-[12px] font-extrabold text-[#f7f8f8]'>
+                          {matchText}
+                        </div>
+                      </div>
+                    ) : (
+                      <span className='ml-2 text-zinc-500'>{matchText}</span>
+                    )}
                   </div>
 
                   <div>
-                    <div className='text-[12px] font-semibold text-zinc-600'>
+                    <div className='text-[12px] font-semibold text-[#9898B8]'>
                       Missing
                     </div>
                     <div className='mt-1 flex flex-wrap gap-1.5'>
                       {missingList.map((s) => (
                         <span
                           key={s}
-                          className={`rounded-full border px-2 py-0.5 text-[11px] font-extrabold ${cardPill.text} ${cardPill.bgSoft} border-black/10`}
+                          className='rounded-full bg-white/5 px-2 py-0.5 text-[11px] font-extrabold text-[#9898B8]'
                           title={s}
                         >
                           {s}
                         </span>
                       ))}
                       {missingExtra > 0 ? (
-                        <span className='rounded-full border border-black/10 bg-white px-2 py-0.5 text-[11px] font-extrabold text-zinc-600'>
+                        <span className='rounded-full bg-white/5 px-2 py-0.5 text-[11px] font-extrabold text-[#9898B8]'>
                           +{missingExtra}
                         </span>
                       ) : null}
                       {missingAllCount === 0 ? (
-                        <span className='rounded-full border border-black/10 bg-white px-2 py-0.5 text-[11px] font-extrabold text-zinc-600'>
+                        <span className='rounded-full bg-white/5 px-2 py-0.5 text-[11px] font-extrabold text-[#9898B8]'>
                           No gaps
                         </span>
                       ) : null}
@@ -248,24 +385,25 @@ function MiniPanel({
                   </div>
 
                   {variant === "lowMatch" ? (
-                    <div className='text-[12px] font-semibold text-zinc-600'>
+                    <div className='text-[12px] font-semibold text-[#d0d6e0]'>
                       Next keyword:{" "}
-                      <span className='text-zinc-800'>{suggested ?? "—"}</span>
+                      <span className='text-[#f7f8f8]'>{suggested ?? "—"}</span>
                     </div>
                   ) : null}
 
                   {variant === "gaps" ? (
-                    <div className='text-[12px] font-semibold text-zinc-600'>
+                    <div className='text-[12px] font-semibold text-[#d0d6e0]'>
                       Suggested:{" "}
-                      <span className='text-zinc-800'>{suggested ?? "—"}</span>
+                      <span className='text-[#f7f8f8]'>{suggested ?? "—"}</span>
                     </div>
                   ) : null}
 
                   {variant === "soonRisk" ? (
-                    <div className='text-[12px] font-semibold text-zinc-600'>
+                    <div className='text-[12px] font-semibold text-[#d0d6e0]'>
                       {dueText ? (
                         <>
-                          Risk: <span className='text-zinc-800'>{dueText}</span>
+                          Risk:{" "}
+                          <span className='text-[#f7f8f8]'>{dueText}</span>
                         </>
                       ) : (
                         "—"
@@ -289,13 +427,25 @@ function MiniPanel({
   );
 }
 
-export function AiSpotlight({ cards }: { cards: JobKanbanCard[] }) {
+export function AiSpotlight({
+  cards,
+  isLoading,
+}: {
+  cards: JobKanbanCard[];
+  isLoading: boolean;
+}) {
+  const [activeTab, setActiveTab] = React.useState<TabKey>("lowMatch");
+
   const safeCards = Array.isArray(cards) ? cards : [];
 
   const lowMatch = sortLowMatch(safeCards).slice(0, 3);
   const gaps = sortMostMissing(safeCards).slice(0, 3);
   const soonCandidates = safeCards.filter((c) => !!c.deadline);
   const soonRisk = sortSoonRisk(soonCandidates).slice(0, 3);
+
+  if (isLoading) {
+    return <AiSpotlightSkeleton />;
+  }
 
   return (
     <section className='rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'>
@@ -308,39 +458,56 @@ export function AiSpotlight({ cards }: { cards: JobKanbanCard[] }) {
             What to improve next — per job, not aggregated.
           </p>
         </div>
-
-        <div className='flex items-center gap-2'>
-          <div
-            className='rounded-lg border border-[#23252a] bg-[#141516] px-3 py-2 text-[12px] font-semibold text-[#d0d6e0]'
-            aria-label='AI powered insights'
-          >
-            AI on your jobs
-          </div>
-        </div>
       </div>
 
-      <div className='mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3'>
-        <MiniPanel
-          title='LOW MATCH'
-          subtitle='Jobs likely needing skill gaps'
-          tint='violet'
-          variant='lowMatch'
-          items={lowMatch}
+      <div className='mt-5 flex items-center gap-3'>
+        <TabButton
+          tab='lowMatch'
+          activeTab={activeTab}
+          onSelect={setActiveTab}
         />
-        <MiniPanel
-          title='GAPS'
-          subtitle='Missing skills with highest count'
-          tint='cyan'
-          variant='gaps'
-          items={gaps}
+        <TabButton
+          tab='gaps'
+          activeTab={activeTab}
+          onSelect={setActiveTab}
         />
-        <MiniPanel
-          title='SOON + RISK'
-          subtitle='Nearest deadlines, low match first'
-          tint='amber'
-          variant='soonRisk'
-          items={soonRisk}
+        <TabButton
+          tab='soonRisk'
+          activeTab={activeTab}
+          onSelect={setActiveTab}
         />
+      </div>
+
+      <div className='mt-5 grid grid-cols-1 gap-4'>
+        {activeTab === "lowMatch" ? (
+          <MiniPanel
+            title='LOW MATCH'
+            subtitle='Jobs likely needing skill gaps'
+            panelKey='lowMatch'
+            variant='lowMatch'
+            items={lowMatch}
+          />
+        ) : null}
+
+        {activeTab === "gaps" ? (
+          <MiniPanel
+            title='GAPS'
+            subtitle='Missing skills with highest count'
+            panelKey='gaps'
+            variant='gaps'
+            items={gaps}
+          />
+        ) : null}
+
+        {activeTab === "soonRisk" ? (
+          <MiniPanel
+            title='SOON + RISK'
+            subtitle='Nearest deadlines, low match first'
+            panelKey='soonRisk'
+            variant='soonRisk'
+            items={soonRisk}
+          />
+        ) : null}
       </div>
     </section>
   );

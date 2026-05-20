@@ -1,20 +1,14 @@
 import { NextResponse } from "next/server";
 import { axiosServer } from "@/core/http/axiosServer";
 
-export async function PATCH(
-  request: Request,
-  context: { params: Promise<{ id: string }> },
-) {
-  const params = await context.params;
-  const id = params.id;
-
-  const body = (await request.json()) as {
-    status: string;
-    interviewAt?: string; // yyyy-mm-dd
-  };
-
+export async function GET(request: Request) {
   try {
-    const res = await axiosServer.patch(`/api/jobs/${id}/status`, body);
+    const url = new URL(request.url);
+    const limit = url.searchParams.get("limit") ?? "20";
+
+    const res = await axiosServer.get(
+      `/api/reminder-logs?limit=${encodeURIComponent(limit)}`,
+    );
 
     return NextResponse.json(res.data.data, { status: res.status });
   } catch (error: unknown) {
@@ -24,7 +18,7 @@ export async function PATCH(
 
     const status = axiosError.response?.status ?? 500;
     const data = axiosError.response?.data ?? {
-      message: "Patch job status failed",
+      message: "Get reminder logs failed",
     };
 
     return NextResponse.json(data, { status });

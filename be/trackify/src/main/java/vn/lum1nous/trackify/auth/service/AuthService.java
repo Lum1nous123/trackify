@@ -13,13 +13,17 @@ import vn.lum1nous.trackify.error.TrackifyException;
 import vn.lum1nous.trackify.entity.User;
 import vn.lum1nous.trackify.repository.UserRepository;
 import vn.lum1nous.trackify.security.jwt.JwtService;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class AuthService {
 
     private static final int VERIFICATION_CODE_LENGTH = 6;
@@ -28,16 +32,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final JavaMailSender javaMailSender;
     private final SecureRandom secureRandom = new SecureRandom();
-
-    public AuthService(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-    }
 
     public AuthTokensResponse register(RegisterRequest request) {
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
@@ -67,6 +63,32 @@ public class AuthService {
 
         // Không log verification code ra console/log để tránh rò rỉ thông tin nhạy cảm.
         log.debug("Generated email verification code for {}", request.getEmail());
+
+        // Send verification email asynchronously so register() doesn't block.
+        // If sending fails, do NOT throw.
+        final String targetEmail = request.getEmail();
+        final String code = verificationCode;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(targetEmail);
+        message.setSubject("[Trackify] Verify your email");
+
+        long ttlMinutes = VERIFICATION_CODE_TTL_SECONDS / 60;
+        message.setText(
+                "Hi,\n\n"
+                        + "Your Trackify verification code is: " + code + "\n"
+                        + "This code expires in " + ttlMinutes + " minutes.\n\n"
+                        + "Enter the code in the app to verify your account.\n\n"
+                        + "— Trackify");
+
+        new Thread(() -> {
+            try {
+                javaMailSender.send(message);
+                log.info("Verification email sent to {}", targetEmail);
+            } catch (Exception ex) {
+                log.warn("Failed to send email verification code to {}", targetEmail, ex);
+            }
+        }, "email-verification-" + targetEmail).start();
 
         String accessToken = jwtService.generateAccessToken(user.getEmail());
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());

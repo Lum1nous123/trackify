@@ -13,17 +13,17 @@ import {
 } from "@/features/kanban/utils/deadline";
 
 const MATCH_COLORS = {
-  red: "#5e6ad2",
-  amber: "#5e6ad2",
-  teal: "#5e6ad2",
+  red: "#FF4D4F", // 0–20
+  yellow: "#FAAD14", // 21–60
+  green: "#52C41A", // 61–100
   gray: "#23252a",
 } as const;
 
-function getMatchBucket(matchScore: number): "red" | "amber" | "teal" {
+function getMatchBucket(matchScore: number): "red" | "yellow" | "green" {
   const s = Math.max(0, Math.min(100, matchScore));
-  if (s >= 75) return "teal";
-  if (s >= 50) return "amber";
-  return "red";
+  if (s <= 20) return "red";
+  if (s <= 60) return "yellow";
+  return "green";
 }
 
 function getMatchStroke(matchScore: number | null | undefined): string {
@@ -34,8 +34,8 @@ function getMatchStroke(matchScore: number | null | undefined): string {
 
 function getAiTone(matchScore: number | null | undefined): DeadlineTone {
   if (typeof matchScore !== "number") return "OK";
-  if (matchScore >= 75) return "OK";
-  if (matchScore >= 50) return "SOON";
+  if (matchScore >= 61) return "OK";
+  if (matchScore >= 21) return "SOON";
   return "OVERDUE";
 }
 
@@ -105,7 +105,7 @@ function MatchCircle({
           textAnchor='middle'
           fontSize='20'
           fontWeight='800'
-          fill='#f7f8f8'
+          fill={stroke}
         >
           {labelText}
         </text>
@@ -190,11 +190,11 @@ function JobCard({ card }: { card: JobKanbanCard }) {
             <img
               src={logoUrl}
               alt={`${card.companyName} logo`}
-              className='h-12 w-12 rounded-2xl ring-1 bg-[#141516] object-cover'
+              className='h-12 w-12 rounded-md ring-1 bg-[#141516] object-contain'
             />
           ) : (
             <div
-              className='flex h-12 w-12 items-center justify-center rounded-2xl ring-1 bg-[#141516]'
+              className='flex h-12 w-12 items-center justify-center rounded-md ring-1 bg-[#141516]'
               style={{ boxShadow: "0 12px 28px rgba(0,0,0,0.06)" }}
               aria-hidden='true'
             >
@@ -253,7 +253,7 @@ function JobCard({ card }: { card: JobKanbanCard }) {
           AI insights
         </div>
 
-        <div className='space-y-2'>
+        <div className='space-y-2 '>
           {hasMissing ? (
             <div className='flex flex-wrap items-center gap-2'>
               <span className='text-[11px] font-extrabold text-zinc-500'>
@@ -262,7 +262,7 @@ function JobCard({ card }: { card: JobKanbanCard }) {
               {missingPreview.map((s) => (
                 <span
                   key={s}
-                  className='rounded-full bg-[#141516] px-2 py-1 text-[11px] font-extrabold text-[#f7f8f8] ring-1 ring-[#23252a]'
+                  className='rounded-full bg-white/10 px-2 py-1 text-[11px] font-extrabold text-[#f7f8f8]'
                 >
                   {s}
                 </span>
@@ -282,7 +282,7 @@ function JobCard({ card }: { card: JobKanbanCard }) {
               {keywordsPreview.map((k) => (
                 <span
                   key={k}
-                  className='rounded-full border border-[#23252a] bg-[#0f1011] px-2 py-1 text-[11px] font-extrabold text-[#f7f8f8]'
+                  className='rounded-full bg-white/10 px-2 py-1 text-[11px] font-extrabold text-[#f7f8f8]'
                 >
                   {k}
                 </span>

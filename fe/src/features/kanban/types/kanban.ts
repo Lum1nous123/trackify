@@ -26,7 +26,8 @@ export type JobKanbanCard = {
   notes?: string;
 
   status: JobStatusKey;
-  deadline?: string; // yyyy-mm-dd (LocalDate serialized)
+  deadline?: string; // yyyy-mm-dd
+  interviewAt?: string; // yyyy-mm-dd
 
   companyLogoUrl?: string;
 

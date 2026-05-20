@@ -2,8 +2,10 @@ package vn.lum1nous.trackify;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
+@EnableScheduling
 public class TrackifyApplication {
 
 	public static void main(String[] args) {

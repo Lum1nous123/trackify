@@ -1,0 +1,40 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    default-encoding: UTF-8
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        chat:
+          enable-cached-content: false
+          options:
+            model: gemini-2.5-flash
+            temperature: 0.7
+            max-output-tokens: 8192
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+trackify:
+  jwt:
+    access-secret: ${TRACKIFY_JWT_ACCESS_SECRET}
+    refresh-secret: ${TRACKIFY_JWT_REFRESH_SECRET}
+    cookie-secure: true
+
+cloudinary:
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}

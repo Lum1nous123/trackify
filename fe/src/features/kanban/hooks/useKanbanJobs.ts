@@ -19,10 +19,20 @@ async function getKanban(): Promise<JobKanbanResponse> {
 async function patchJobStatus(params: {
   id: string;
   status: JobStatusKey;
+  interviewAt?: string; // yyyy-mm-dd
 }): Promise<unknown> {
-  const res = await axiosClient.patch(`/api/proxy/jobs/${params.id}/status`, {
+  const body: { status: JobStatusKey; interviewAt?: string } = {
     status: params.status,
-  });
+  };
+
+  if (params.status === "INTERVIEW") {
+    body.interviewAt = params.interviewAt;
+  }
+
+  const res = await axiosClient.patch(
+    `/api/proxy/jobs/${params.id}/status`,
+    body,
+  );
   return res.data;
 }
 

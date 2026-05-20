@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AuthLogo } from "@/features/auth/components/AuthLogo";
 import { AuthShell } from "@/features/auth/components/AuthShell";
 import { axiosClient } from "@/core/http/axiosClient";
+import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 
 type RegisterForm = {
   email: string;
@@ -14,77 +15,30 @@ type RegisterForm = {
 };
 
 const InputIconMail = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    width='18'
-    height='18'
-    viewBox='0 0 24 24'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
+  <Mail
+    className={className ? className : "text-[#6B7280]"}
+    width={18}
+    height={18}
     aria-hidden='true'
-  >
-    <path
-      d='M4 6.5H20V17.5C20 18.0523 19.5523 18.5 19 18.5H5C4.44772 18.5 4 18.0523 4 17.5V6.5Z'
-      stroke='#6B7280'
-      strokeWidth='2'
-      strokeLinejoin='round'
-    />
-    <path
-      d='M4.5 7L12 12.2L19.5 7'
-      stroke='#6B7280'
-      strokeWidth='2'
-      strokeLinejoin='round'
-    />
-  </svg>
+  />
 );
 
 const InputIconUser = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    width='18'
-    height='18'
-    viewBox='0 0 24 24'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
+  <User
+    className={className ? className : "text-[#6B7280]"}
+    width={18}
+    height={18}
     aria-hidden='true'
-  >
-    <path
-      d='M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z'
-      stroke='#6B7280'
-      strokeWidth='2'
-    />
-    <path
-      d='M20 22C20 17.5817 16.4183 14 12 14C7.58172 14 4 17.5817 4 22'
-      stroke='#6B7280'
-      strokeWidth='2'
-      strokeLinecap='round'
-    />
-  </svg>
+  />
 );
 
 const InputIconLock = ({ className }: { className?: string }) => (
-  <svg
-    className={className}
-    width='18'
-    height='18'
-    viewBox='0 0 24 24'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
+  <Lock
+    className={className ? className : "text-[#6B7280]"}
+    width={18}
+    height={18}
     aria-hidden='true'
-  >
-    <path
-      d='M7 11V8.5C7 6.567 8.567 5 10.5 5C12.433 5 14 6.567 14 8.5V11'
-      stroke='#6B7280'
-      strokeWidth='2'
-      strokeLinecap='round'
-    />
-    <path
-      d='M6.5 11H14.5C15.0523 11 15.5 11.4477 15.5 12V19C15.5 19.5523 15.0523 20 14.5 20H6.5C5.94772 20 5.5 19.5523 5.5 19V12C5.5 11.4477 5.94772 11 6.5 11Z'
-      stroke='#6B7280'
-      strokeWidth='2'
-      strokeLinejoin='round'
-    />
-  </svg>
+  />
 );
 
 const InputIconEye = ({
@@ -94,68 +48,22 @@ const InputIconEye = ({
   className?: string;
   open: boolean;
 }) => {
-  if (open) {
-    return (
-      <svg
-        className={className}
-        width='20'
-        height='20'
-        viewBox='0 0 24 24'
-        fill='none'
-        xmlns='http://www.w3.org/2000/svg'
-        aria-hidden='true'
-      >
-        <path
-          d='M2.5 12C4.5 7.5 8 5 12 5C16 5 19.5 7.5 21.5 12C19.5 16.5 16 19 12 19C8 19 4.5 16.5 2.5 12Z'
-          stroke='#6B7280'
-          strokeWidth='2'
-          strokeLinejoin='round'
-        />
-        <path
-          d='M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z'
-          stroke='#6B7280'
-          strokeWidth='2'
-          strokeLinejoin='round'
-        />
-      </svg>
-    );
-  }
+  const iconClass = className ? className : "text-[#6B7280]";
 
-  return (
-    <svg
-      className={className}
-      width='20'
-      height='20'
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
+  return open ? (
+    <Eye
+      className={iconClass}
+      width={20}
+      height={20}
       aria-hidden='true'
-    >
-      <path
-        d='M3 3L21 21'
-        stroke='#6B7280'
-        strokeWidth='2'
-        strokeLinecap='round'
-      />
-      <path
-        d='M2.5 12C4.5 7.5 8 5 12 5C13.3 5 14.5 5.3 15.6 5.8'
-        stroke='#6B7280'
-        strokeWidth='2'
-        strokeLinejoin='round'
-      />
-      <path
-        d='M21.5 12C19.5 16.5 16 19 12 19C10.7 19 9.5 18.7 8.4 18.2'
-        stroke='#6B7280'
-        strokeWidth='2'
-        strokeLinejoin='round'
-      />
-      <path
-        d='M9.5 9.5C8.8 10.3 8.5 11.2 8.5 12C8.5 13.7 10 15 12 15C12.8 15 13.7 14.7 14.5 14'
-        stroke='#6B7280'
-        strokeWidth='2'
-        strokeLinejoin='round'
-      />
-    </svg>
+    />
+  ) : (
+    <EyeOff
+      className={iconClass}
+      width={20}
+      height={20}
+      aria-hidden='true'
+    />
   );
 };
 

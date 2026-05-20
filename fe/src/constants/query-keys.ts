@@ -21,4 +21,8 @@ export const queryKeys = {
   applications: {
     jobs: () => ["applications", "jobs"] as const,
   },
+  reminders: {
+    settings: () => ["reminders", "settings"] as const,
+    logs: (params: { limit: number }) => ["reminders", "logs", params] as const,
+  },
 } as const;

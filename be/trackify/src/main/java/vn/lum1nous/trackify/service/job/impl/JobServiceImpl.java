@@ -221,6 +221,34 @@ public class JobServiceImpl implements JobService {
             return;
         }
 
+        // interviewAt handling (yyyy-MM-dd)
+        LocalDate interviewAt = null;
+        String interviewAtRaw = trimToNull(request.getInterviewAt());
+        if (interviewAtRaw != null) {
+            try {
+                interviewAt = LocalDate.parse(interviewAtRaw);
+            } catch (Exception ex) {
+                throw new TrackifyException(ErrorCode.BAD_REQUEST, 400,
+                        "Invalid interviewAt format. Expected YYYY-MM-DD");
+            }
+        }
+
+        if (nextStatus == JobStatus.INTERVIEW) {
+            if (interviewAt == null) {
+                throw new TrackifyException(ErrorCode.BAD_REQUEST, 400,
+                        "interviewAt is required when status is INTERVIEW");
+            }
+            if (job.getDeadline() == null) {
+                throw new TrackifyException(ErrorCode.BAD_REQUEST, 400, "deadline is required to validate interviewAt");
+            }
+            if (interviewAt.isAfter(job.getDeadline())) {
+                throw new TrackifyException(ErrorCode.BAD_REQUEST, 400, "interviewAt must be <= deadline");
+            }
+            job.setInterviewAt(interviewAt);
+        } else {
+            job.setInterviewAt(null);
+        }
+
         job.setStatus(toStatus);
         Job saved = jobRepository.save(job);
 
@@ -565,6 +593,7 @@ public class JobServiceImpl implements JobService {
         card.setJdUrl(job.getJdUrl());
         card.setStatus(job.getStatus());
         card.setDeadline(job.getDeadline());
+        card.setInterviewAt(job.getInterviewAt());
         card.setCompanyLogoUrl(job.getCompanyLogoUrl());
         card.setCreatedAt(job.getCreatedAt());
         card.setUpdatedAt(job.getUpdatedAt());

@@ -1,4 +1,5 @@
 import React from "react";
+import { CalendarDays, CalendarRange, Clock, Mail } from "lucide-react";
 import { TINTS, type Tint } from "../utils/tints";
 import type { DashboardStat } from "../mock/mockData";
 
@@ -12,39 +13,31 @@ function accentClasses(accent: Tint) {
   };
 }
 
-const StatIcon = ({ accent }: { accent: Tint }) => {
-  const t = TINTS[accent];
-  return (
-    <svg
-      className={t.icon}
-      width='22'
-      height='22'
-      viewBox='0 0 24 24'
-      fill='none'
-      xmlns='http://www.w3.org/2000/svg'
-      aria-hidden='true'
-    >
-      <path
-        d='M7 7h10v10H7V7Z'
-        stroke='currentColor'
-        strokeWidth='1.8'
-        strokeLinejoin='round'
-      />
-      <path
-        d='M4 4h16v16'
-        stroke='currentColor'
-        strokeWidth='1.8'
-        strokeLinecap='round'
-      />
-    </svg>
-  );
-};
+function statIconByKey(key: string): React.ElementType {
+  // Những key này được render từ fe/src/app/dashboard/page.tsx
+  // (interviewsThisWeek, pendingResponses, thisMonth, upcomingDeadlines)
+  switch (key) {
+    case "interviewsThisWeek":
+      return CalendarRange;
+    case "pendingResponses":
+      return Mail;
+    case "thisMonth":
+      return CalendarDays;
+    case "upcomingDeadlines":
+      return Clock;
+    default:
+      return CalendarDays;
+  }
+}
 
 export function StatCards({ stats }: { stats: DashboardStat[] }) {
   return (
     <section className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
       {stats.map((s) => {
         const a = accentClasses(s.accent);
+        const Icon = statIconByKey(s.key);
+        const t = TINTS[s.accent];
+
         return (
           <article
             key={s.key}
@@ -72,7 +65,11 @@ export function StatCards({ stats }: { stats: DashboardStat[] }) {
               </div>
 
               <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-black/0 transition-colors group-hover:bg-white/40'>
-                <StatIcon accent={s.accent} />
+                <Icon
+                  className={`${t.icon} h-[22px] w-[22px]`}
+                  strokeWidth={1.8}
+                  aria-hidden='true'
+                />
               </div>
             </div>
 

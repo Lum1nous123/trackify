@@ -59,6 +59,12 @@ public class AuthController {
         return ApiResponse.success(200, authService.verify(request));
     }
 
+    @PostMapping("/verify-email")
+    public ApiResponse<AuthTokensResponse> verifyEmail(
+            @Valid @RequestBody VerifyRequest request) {
+        return ApiResponse.success(200, authService.verify(request));
+    }
+
     @PostMapping("/refresh")
     public ApiResponse<AuthTokensResponse> refresh(HttpServletRequest request) {
         String cookieHeader = request.getHeader("Cookie");
