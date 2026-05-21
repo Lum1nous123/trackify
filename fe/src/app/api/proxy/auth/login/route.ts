@@ -11,6 +11,14 @@ const getCookieSecure = (): boolean => {
   );
 };
 
+const getCookieConfig = () => {
+  const isProduction = process.env.NODE_ENV === "production";
+  return {
+    secure: isProduction,
+    sameSite: isProduction ? ("none" as const) : ("lax" as const),
+  };
+};
+
 type LoginRequestBody = {
   email: string;
   password: string;
@@ -52,17 +60,19 @@ export async function POST(request: Request) {
       );
     }
 
+    const cookieConfig = getCookieConfig();
+
     response.cookies.set(ACCESS_COOKIE_NAME, tokens.accessToken, {
       httpOnly: true,
-      secure: getCookieSecure(),
-      sameSite: "lax",
+      secure: cookieConfig.secure,
+      sameSite: cookieConfig.sameSite,
       path: "/",
     });
 
     response.cookies.set(REFRESH_COOKIE_NAME, tokens.refreshToken, {
       httpOnly: true,
-      secure: getCookieSecure(),
-      sameSite: "lax",
+      secure: cookieConfig.secure,
+      sameSite: cookieConfig.sameSite,
       path: "/",
     });
 
