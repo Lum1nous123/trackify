@@ -31,6 +31,8 @@ spring:
 
 trackify:
   jwt:
+    access-cookie-name: TRACKIFY_ACCESS_TOKEN
+    refresh-cookie-name: TRACKIFY_REFRESH_TOKEN
     access-secret: ${TRACKIFY_JWT_ACCESS_SECRET}
     refresh-secret: ${TRACKIFY_JWT_REFRESH_SECRET}
     cookie-secure: true

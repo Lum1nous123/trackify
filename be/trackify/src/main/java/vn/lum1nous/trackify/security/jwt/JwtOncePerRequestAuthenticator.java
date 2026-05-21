@@ -93,6 +93,9 @@ public class JwtOncePerRequestAuthenticator extends OncePerRequestFilter {
 
         log.info("accessToken: {}", accessToken);
         log.info("refreshToken", refreshToken);
+
+        log.info("Expected cookie name: '{}'", jwtProperties.getAccessCookieName());
+        log.info("Cookie header: '{}'", cookieHeader);
         // Ưu tiên access token nếu hợp lệ
         if (accessToken != null) {
             boolean valid = jwtService.isAccessTokenValid(accessToken);
