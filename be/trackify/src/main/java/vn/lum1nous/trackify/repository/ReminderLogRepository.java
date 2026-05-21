@@ -20,4 +20,10 @@ public interface ReminderLogRepository extends JpaRepository<ReminderLog, UUID> 
     List<ReminderLog> findTop20ByUser_IdOrderByTriggerDateDesc(UUID userId);
 
     List<ReminderLog> findByUser_IdOrderByTriggerDateDesc(UUID userId, Pageable pageable);
+
+    long countByUser_IdAndReadAtIsNull(UUID userId);
+
+    List<ReminderLog> findByUser_IdAndReadAtIsNullOrderByTriggerDateDesc(
+            UUID userId,
+            Pageable pageable);
 }

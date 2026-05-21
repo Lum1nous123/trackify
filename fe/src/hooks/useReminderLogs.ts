@@ -11,22 +11,41 @@ export type ReminderLog = {
   reminderType: string;
   triggerDate: string; // yyyy-mm-dd
   sentAt: string; // ISO
+  readAt?: string | null;
+
   companyName?: string | null;
   position?: string | null;
 };
 
-async function getReminderLogs(limit: number): Promise<ReminderLog[]> {
+type GetReminderLogsParams = {
+  limit: number;
+  offset: number;
+};
+
+async function getReminderLogsPage(params: GetReminderLogsParams) {
+  const { limit, offset } = params;
+
   const res = await axiosClient.get<ReminderLog[]>(
-    `/api/proxy/reminders/logs?limit=${encodeURIComponent(String(limit))}`,
+    `/api/proxy/reminders/logs?limit=${encodeURIComponent(String(limit))}&offset=${encodeURIComponent(
+      String(offset),
+    )}`,
   );
+
   return res.data;
 }
 
-export function useReminderLogs(limit: number = 20) {
+export function useReminderLogs(
+  limit: number = 20,
+  options?: { offset?: number; enabled?: boolean },
+) {
+  const offset = options?.offset ?? 0;
+  const enabled = options?.enabled ?? true;
+
   return useQuery({
-    queryKey: queryKeys.reminders.logs({ limit }),
-    queryFn: () => getReminderLogs(limit),
+    queryKey: queryKeys.reminders.logsWithOffset({ limit, offset }),
+    queryFn: () => getReminderLogsPage({ limit, offset }),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled,
   });
 }

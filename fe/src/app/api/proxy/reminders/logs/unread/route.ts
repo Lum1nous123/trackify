@@ -4,11 +4,13 @@ import { axiosServer } from "@/core/http/axiosServer";
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
-    const limit = url.searchParams.get("limit") ?? "20";
+    const limit = url.searchParams.get("limit") ?? "10";
     const offset = url.searchParams.get("offset") ?? "0";
 
     const res = await axiosServer.get(
-      `/api/reminder-logs?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(offset)}`,
+      `/api/reminder-logs/unread?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(
+        offset,
+      )}`,
     );
 
     return NextResponse.json(res.data.data, { status: res.status });
@@ -19,7 +21,7 @@ export async function GET(request: Request) {
 
     const status = axiosError.response?.status ?? 500;
     const data = axiosError.response?.data ?? {
-      message: "Get reminder logs failed",
+      message: "Get unread reminder logs failed",
     };
 
     return NextResponse.json(data, { status });

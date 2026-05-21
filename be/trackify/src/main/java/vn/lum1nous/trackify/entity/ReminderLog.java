@@ -52,6 +52,9 @@ public class ReminderLog {
     @Column(name = "sent_at", nullable = false)
     private Instant sentAt;
 
+    @Column(name = "read_at", nullable = true)
+    private Instant readAt;
+
     @Column(name = "trigger_date", nullable = true)
     private LocalDate triggerDate;
 }

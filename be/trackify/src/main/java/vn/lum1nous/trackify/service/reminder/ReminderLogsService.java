@@ -25,16 +25,23 @@ public class ReminderLogsService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public List<ReminderLogResponse> getCurrentUserLogs(int limit) {
+    public List<ReminderLogResponse> getCurrentUserLogs(int limit, int offset) {
         if (limit <= 0) {
             throw new TrackifyException(ErrorCode.BAD_REQUEST, 400, "limit must be > 0");
+        }
+        if (offset < 0) {
+            throw new TrackifyException(ErrorCode.BAD_REQUEST, 400, "offset must be >= 0");
         }
 
         User user = getCurrentUser();
 
+        int safeLimit = Math.min(limit, 100);
+        int safeOffset = offset;
+        int page = safeLimit == 0 ? 0 : (safeOffset / safeLimit);
+
         List<ReminderLog> logs = reminderLogRepository.findByUser_IdOrderByTriggerDateDesc(
                 user.getId(),
-                PageRequest.of(0, Math.min(limit, 100)));
+                PageRequest.of(page, safeLimit));
 
         return logs.stream()
                 .map(this::toResponse)
@@ -49,12 +56,73 @@ public class ReminderLogsService {
         res.setReminderType(log.getReminderType());
         res.setTriggerDate(log.getTriggerDate());
         res.setSentAt(log.getSentAt());
+        res.setReadAt(log.getReadAt());
 
         if (log.getJob() != null) {
             res.setCompanyName(log.getJob().getCompanyName());
             res.setPosition(log.getJob().getPosition());
         }
         return res;
+    }
+
+    public long getCurrentUnreadCount() {
+        User user = getCurrentUser();
+        return reminderLogRepository.countByUser_IdAndReadAtIsNull(user.getId());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReminderLogResponse> getCurrentUnreadLogs(int limit, int offset) {
+        if (limit <= 0) {
+            throw new TrackifyException(ErrorCode.BAD_REQUEST, 400, "limit must be > 0");
+        }
+        if (offset < 0) {
+            throw new TrackifyException(ErrorCode.BAD_REQUEST, 400, "offset must be >= 0");
+        }
+
+        User user = getCurrentUser();
+
+        int safeLimit = Math.min(limit, 100);
+        int safeOffset = offset;
+        int page = safeLimit == 0 ? 0 : (safeOffset / safeLimit);
+
+        List<ReminderLog> logs = reminderLogRepository.findByUser_IdAndReadAtIsNullOrderByTriggerDateDesc(
+                user.getId(),
+                PageRequest.of(page, safeLimit));
+
+        return logs.stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public int markCurrentUserAllUnreadAsRead() {
+        User user = getCurrentUser();
+
+        int markedCount = 0;
+        int chunkSize = 200;
+        java.time.Instant now = java.time.Instant.now();
+
+        while (true) {
+            List<ReminderLog> unreadChunk = reminderLogRepository
+                    .findByUser_IdAndReadAtIsNullOrderByTriggerDateDesc(
+                            user.getId(),
+                            PageRequest.of(0, chunkSize));
+
+            if (unreadChunk == null || unreadChunk.isEmpty()) {
+                break;
+            }
+
+            for (ReminderLog log : unreadChunk) {
+                if (log != null) {
+                    log.setReadAt(now);
+                }
+            }
+
+            reminderLogRepository.saveAll(unreadChunk);
+            markedCount += unreadChunk.size();
+        }
+
+        return markedCount;
     }
 
     private User getCurrentUser() {

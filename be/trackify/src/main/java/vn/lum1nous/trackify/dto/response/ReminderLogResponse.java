@@ -20,6 +20,8 @@ public class ReminderLogResponse {
 
     private Instant sentAt;
 
+    private Instant readAt;
+
     private String companyName;
 
     private String position;
@@ -70,6 +72,14 @@ public class ReminderLogResponse {
 
     public void setSentAt(Instant sentAt) {
         this.sentAt = sentAt;
+    }
+
+    public Instant getReadAt() {
+        return readAt;
+    }
+
+    public void setReadAt(Instant readAt) {
+        this.readAt = readAt;
     }
 
     public String getCompanyName() {

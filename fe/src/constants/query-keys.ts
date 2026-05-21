@@ -24,5 +24,11 @@ export const queryKeys = {
   reminders: {
     settings: () => ["reminders", "settings"] as const,
     logs: (params: { limit: number }) => ["reminders", "logs", params] as const,
+    logsWithOffset: (params: { limit: number; offset: number }) =>
+      ["reminders", "logs", "offset", params] as const,
+
+    unreadCount: () => ["reminders", "unread", "count"] as const,
+    unreadLogs: (params: { limit: number; offset: number }) =>
+      ["reminders", "unread", "logs", params] as const,
   },
 } as const;

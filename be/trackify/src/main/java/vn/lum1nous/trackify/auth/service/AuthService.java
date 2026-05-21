@@ -51,29 +51,6 @@ public class AuthService {
 
         // Send verification email synchronously so we can fail fast and NOT issue
         // tokens.
-        String targetEmail = request.getEmail();
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(targetEmail);
-        message.setSubject("[Trackify] Verify your email");
-
-        long ttlMinutes = VERIFICATION_CODE_TTL_SECONDS / 60;
-        message.setText(
-                "Hi,\n\n"
-                        + "Your Trackify verification code is: " + verificationCode + "\n"
-                        + "This code expires in " + ttlMinutes + " minutes.\n\n"
-                        + "Enter the code in the app to verify your account.\n\n"
-                        + "— Trackify");
-
-        try {
-            javaMailSender.send(message);
-            log.info("Verification email sent to {}", targetEmail);
-        } catch (Exception ex) {
-            log.warn("Failed to send email verification code to {}", targetEmail, ex);
-            throw new TrackifyException(
-                    ErrorCode.INTERNAL_SERVER_ERROR,
-                    500,
-                    "Failed to send verification email");
-        }
 
         User user = new User();
         user.setEmail(request.getEmail());

@@ -1,5 +1,6 @@
 import React from "react";
 import { SidebarNav } from "./SidebarNav";
+import NotificationBell from "@/features/dashboard/components/NotificationBell";
 
 export type DashboardShellProps = {
   pageTitle: string;
@@ -43,13 +44,17 @@ export function DashboardShell({ pageTitle, children }: DashboardShellProps) {
             </div>
           </div>
 
-          <div className='hidden w-[420px] items-center gap-3 rounded-full bg-[#0f1011] px-4 py-2 ring-1 ring-[#23252a] md:flex'>
-            <SearchIcon />
-            <input
-              aria-label='Search applications'
-              placeholder='Search applications...'
-              className='w-full bg-transparent text-sm text-[#d0d6e0] placeholder:text-[#8a8f98] outline-none'
-            />
+          <div className='flex items-center gap-3'>
+            <div className='hidden w-[420px] items-center gap-3 rounded-full bg-[#0f1011] px-4 py-2 ring-1 ring-[#23252a] md:flex'>
+              <SearchIcon />
+              <input
+                aria-label='Search applications'
+                placeholder='Search applications...'
+                className='w-full bg-transparent text-sm text-[#d0d6e0] placeholder:text-[#8a8f98] outline-none'
+              />
+            </div>
+
+            <NotificationBell />
           </div>
         </header>
 

@@ -1,16 +1,9 @@
 import { NextResponse } from "next/server";
 import { axiosServer } from "@/core/http/axiosServer";
 
-export async function GET(request: Request) {
+export async function POST() {
   try {
-    const url = new URL(request.url);
-    const limit = url.searchParams.get("limit") ?? "20";
-    const offset = url.searchParams.get("offset") ?? "0";
-
-    const res = await axiosServer.get(
-      `/api/reminder-logs?limit=${encodeURIComponent(limit)}&offset=${encodeURIComponent(offset)}`,
-    );
-
+    const res = await axiosServer.post(`/api/reminder-logs/unread/mark-read`);
     return NextResponse.json(res.data.data, { status: res.status });
   } catch (error: unknown) {
     const axiosError = error as {
@@ -19,7 +12,7 @@ export async function GET(request: Request) {
 
     const status = axiosError.response?.status ?? 500;
     const data = axiosError.response?.data ?? {
-      message: "Get reminder logs failed",
+      message: "Mark reminder logs as read failed",
     };
 
     return NextResponse.json(data, { status });
