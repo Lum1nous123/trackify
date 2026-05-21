@@ -58,6 +58,7 @@ public class SecurityConfig {
                                                 .authenticationEntryPoint(jsonAuthenticationEntryPoint)
                                                 .accessDeniedHandler(jsonAccessDeniedHandler))
                                 .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/api/health").permitAll()
                                                 .requestMatchers("/api/auth/**").permitAll()
                                                 .requestMatchers("/api/scrape/**").permitAll()
                                                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**")
