@@ -100,7 +100,9 @@ export default function RegisterPage() {
         password: form.password,
       });
 
-      window.location.assign("/");
+      window.location.assign(
+        `/verify-email?email=${encodeURIComponent(form.email)}`,
+      );
     } catch (err: unknown) {
       const maybe = err as {
         response?: { data?: { message?: string } };

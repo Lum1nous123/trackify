@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { BACKEND_BASE_URL, axiosServer } from "@/core/http/axiosServer";
+
+import { axiosServer } from "@/core/http/axiosServer";
 
 const ACCESS_COOKIE_NAME = "TRACKIFY_ACCESS_TOKEN";
 const REFRESH_COOKIE_NAME = "TRACKIFY_REFRESH_TOKEN";
@@ -11,11 +12,9 @@ const getCookieSecure = (): boolean => {
   );
 };
 
-type RegisterRequestBody = {
+type VerifyRequestBody = {
   email: string;
-  password: string;
-  username: string;
-  fullName: string;
+  code: string;
 };
 
 type AuthTokensResponse = {
@@ -35,11 +34,11 @@ type ApiResponse<T> = {
 };
 
 export async function POST(request: Request) {
-  const body = (await request.json()) as RegisterRequestBody;
+  const body = (await request.json()) as VerifyRequestBody;
 
   try {
     const res = await axiosServer.post<ApiResponse<AuthTokensResponse>>(
-      "/api/auth/register",
+      "/api/auth/verify-email",
       body,
     );
 
@@ -47,30 +46,32 @@ export async function POST(request: Request) {
 
     const tokens = res.data.data;
 
-    // Register bây giờ KHÔNG cấp token cho tới khi verify email.
-    // Vậy nên nếu tokens null -> vẫn return 200 để UI redirect tới verify-email.
-    if (tokens?.accessToken && tokens?.refreshToken) {
-      response.cookies.set(ACCESS_COOKIE_NAME, tokens.accessToken, {
-        httpOnly: true,
-        secure: getCookieSecure(),
-        sameSite: "lax",
-        path: "/",
-      });
-
-      response.cookies.set(REFRESH_COOKIE_NAME, tokens.refreshToken, {
-        httpOnly: true,
-        secure: getCookieSecure(),
-        sameSite: "lax",
-        path: "/",
-      });
+    if (!tokens?.accessToken || !tokens?.refreshToken) {
+      return NextResponse.json(
+        { message: "Proxy verify-email failed: missing tokens" },
+        { status: 500 },
+      );
     }
+
+    response.cookies.set(ACCESS_COOKIE_NAME, tokens.accessToken, {
+      httpOnly: true,
+      secure: getCookieSecure(),
+      sameSite: "lax",
+      path: "/",
+    });
+
+    response.cookies.set(REFRESH_COOKIE_NAME, tokens.refreshToken, {
+      httpOnly: true,
+      secure: getCookieSecure(),
+      sameSite: "lax",
+      path: "/",
+    });
 
     return response;
   } catch (error: unknown) {
     const axiosError = error as {
       response?: { status?: number; data?: unknown };
       message?: string;
-      code?: string;
     };
 
     const status = axiosError.response?.status ?? 500;
@@ -81,9 +82,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       {
-        message: axiosError.message ?? "Proxy register failed",
-        code: axiosError.code,
-        backendBaseUrl: BACKEND_BASE_URL,
+        message: axiosError.message ?? "Proxy verify-email failed",
       },
       { status },
     );

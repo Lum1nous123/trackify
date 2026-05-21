@@ -4,4 +4,5 @@ export type MeResponse = {
   username: string;
   fullName: string | null;
   avatarUrl: string | null;
+  emailVerified: boolean;
 };

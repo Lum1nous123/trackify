@@ -1,58 +1,52 @@
 import React from "react";
 import type { PipelineStage } from "../mock/mockData";
-import { TINTS, type Tint } from "../utils/tints";
+import type { Tint } from "../utils/tints";
 
 const tintBarClasses = (tint: Tint) => {
-  // Nặng màu hơn để dễ nhìn (pipeline cần tương phản rõ hơn StatCards).
-  // Không dùng trực tiếp TINTS.bgSoft/text vì đang quá nhạt.
+  // Mục tiêu:
+  // - màu sáng, bão hoà (không dùng /25 /30 để tránh “đục/muddy”)
+  // - bỏ border/ring
+  // - chữ tương phản rõ ràng để đọc tốt trên nền dark
   switch (tint) {
     case "indigo":
       return {
         bar: [
           "flex h-[44px] items-center justify-between rounded-lg px-5",
-          "border-2 shadow-[0_12px_30px_rgba(99,102,241,0.14)] ring-1",
-          "bg-indigo-500/25",
-          "border-indigo-600/55",
+          "bg-indigo-500",
         ].join(" "),
-        label: "text-[11px] font-extrabold tracking-widest text-indigo-900",
-        count: "text-indigo-900",
-        focusRing: "ring-indigo-500/35",
+        label: "text-[11px] font-extrabold tracking-widest text-zinc-50",
+        count: "text-zinc-50",
+        focusRing: "",
       };
     case "violet":
       return {
         bar: [
           "flex h-[44px] items-center justify-between rounded-lg px-5",
-          "border-2 shadow-[0_12px_30px_rgba(139,92,246,0.14)] ring-1",
-          "bg-violet-500/25",
-          "border-violet-600/55",
+          "bg-violet-500",
         ].join(" "),
-        label: "text-[11px] font-extrabold tracking-widest text-violet-900",
-        count: "text-violet-900",
-        focusRing: "ring-violet-500/35",
+        label: "text-[11px] font-extrabold tracking-widest text-zinc-50",
+        count: "text-zinc-50",
+        focusRing: "",
       };
     case "cyan":
       return {
         bar: [
           "flex h-[44px] items-center justify-between rounded-lg px-5",
-          "border-2 shadow-[0_12px_30px_rgba(0,201,255,0.14)] ring-1",
-          "bg-cyan-500/25",
-          "border-cyan-600/55",
+          "bg-cyan-500",
         ].join(" "),
-        label: "text-[11px] font-extrabold tracking-widest text-cyan-900",
-        count: "text-cyan-900",
-        focusRing: "ring-cyan-500/35",
+        label: "text-[11px] font-extrabold tracking-widest text-zinc-50",
+        count: "text-zinc-50",
+        focusRing: "",
       };
     case "amber":
       return {
         bar: [
           "flex h-[44px] items-center justify-between rounded-lg px-5",
-          "border-2 shadow-[0_12px_30px_rgba(245,158,11,0.18)] ring-1",
-          "bg-amber-400/30",
-          "border-amber-600/55",
+          "bg-amber-400",
         ].join(" "),
-        label: "text-[11px] font-extrabold tracking-widest text-amber-900",
-        count: "text-amber-900",
-        focusRing: "ring-amber-500/40",
+        label: "text-[11px] font-extrabold tracking-widest text-zinc-900",
+        count: "text-zinc-900",
+        focusRing: "",
       };
     default: {
       const _exhaustive: never = tint;

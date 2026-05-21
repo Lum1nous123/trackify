@@ -68,6 +68,7 @@ public class UserService {
                 user.getEmail(),
                 user.getUsername(),
                 user.getFullName(),
-                user.getAvatarUrl());
+                user.getAvatarUrl(),
+                true);
     }
 }

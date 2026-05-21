@@ -110,25 +110,51 @@ export default function DashboardLoading() {
         </div>
 
         {/* Upcoming deadlines skeleton */}
-        <section className='rounded-2xl bg-[#0f1011] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'>
-          <div className='flex items-center justify-between gap-4'>
-            <SkeletonBlock className='h-[28px] w-[45%] rounded-2xl bg-white/8' />
-            <SkeletonBlock className='h-[28px] w-[25%] rounded-2xl bg-white/8' />
+        <section className='mt-2 rounded-2xl bg-[#0f1011] border border-[#23252a] p-6 shadow-[0_1px_0_rgba(35,37,42,0.40),0_12px_35px_rgba(0,0,0,0.18)]'>
+          <div className='flex items-start justify-between gap-4'>
+            <div className='min-w-0'>
+              <SkeletonBlock className='h-[20px] w-[55%] bg-white/10' />
+              <div className='mt-2'>
+                <SkeletonBlock className='h-[12px] w-[65%] bg-white/10' />
+              </div>
+            </div>
+
+            <SkeletonBlock className='h-[32px] w-[88px] rounded-lg bg-white/10' />
           </div>
 
-          <div className='mt-5 space-y-3'>
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <div
-                key={idx}
-                className='flex items-center gap-3'
-              >
-                <div className='h-10 w-10 animate-pulse rounded-xl bg-white/5' />
-                <div className='flex-1 space-y-2'>
-                  <div className='h-3 w-[65%] animate-pulse rounded bg-white/10' />
-                  <div className='h-3 w-[45%] animate-pulse rounded bg-white/10' />
+          <div className='mt-6 overflow-x-auto pb-2'>
+            <div className='flex min-w-max gap-4'>
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <div
+                  key={idx}
+                  className='w-[220px] shrink-0 rounded-2xl bg-[#0f1011] p-4'
+                >
+                  {/* Top accent bar */}
+                  <div className='h-1 w-full animate-pulse rounded-full bg-white/10' />
+
+                  <div className='mt-3 flex items-start justify-between gap-4'>
+                    <div className='min-w-0'>
+                      <div className='flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white/5'>
+                        <div className='h-[26px] w-[26px] animate-pulse rounded-lg bg-white/10' />
+                      </div>
+
+                      <div className='mt-3 h-[16px] w-[80%] animate-pulse rounded bg-white/10' />
+                      <div className='mt-2 h-[12px] w-[70%] animate-pulse rounded bg-white/10' />
+                    </div>
+
+                    {/* Pill */}
+                    <div className='h-[28px] w-[110px] animate-pulse rounded-full bg-white/10' />
+                  </div>
+
+                  <div className='mt-3 h-px w-full bg-white/5' />
+
+                  <div className='mt-3 flex items-center gap-2 text-[12px] font-semibold text-[#d0d6e0]'>
+                    <div className='h-4 w-4 animate-pulse rounded bg-white/10' />
+                    <div className='h-[12px] w-[70%] animate-pulse rounded bg-white/10' />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
       </div>

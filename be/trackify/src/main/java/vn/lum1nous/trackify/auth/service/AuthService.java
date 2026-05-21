@@ -37,16 +37,43 @@ public class AuthService {
 
     public AuthTokensResponse register(RegisterRequest request) {
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            throw new TrackifyException(ErrorCode.EMAIL_ALREADY_EXISTS, 409,
-                    "Email already exists");
+            throw new TrackifyException(ErrorCode.EMAIL_ALREADY_EXISTS, 409, "Email already exists");
         });
 
         userRepository.findByUsername(request.getUsername()).ifPresent(user -> {
-            throw new TrackifyException(ErrorCode.USERNAME_ALREADY_EXISTS, 409,
-                    "Username already exists");
+            throw new TrackifyException(ErrorCode.USERNAME_ALREADY_EXISTS, 409, "Username already exists");
         });
 
         String verificationCode = generateVerificationCode();
+
+        // Không log verification code ra console/log để tránh rò rỉ thông tin nhạy cảm.
+        log.debug("Generated email verification code for {}", request.getEmail());
+
+        // Send verification email synchronously so we can fail fast and NOT issue
+        // tokens.
+        String targetEmail = request.getEmail();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(targetEmail);
+        message.setSubject("[Trackify] Verify your email");
+
+        long ttlMinutes = VERIFICATION_CODE_TTL_SECONDS / 60;
+        message.setText(
+                "Hi,\n\n"
+                        + "Your Trackify verification code is: " + verificationCode + "\n"
+                        + "This code expires in " + ttlMinutes + " minutes.\n\n"
+                        + "Enter the code in the app to verify your account.\n\n"
+                        + "— Trackify");
+
+        try {
+            javaMailSender.send(message);
+            log.info("Verification email sent to {}", targetEmail);
+        } catch (Exception ex) {
+            log.warn("Failed to send email verification code to {}", targetEmail, ex);
+            throw new TrackifyException(
+                    ErrorCode.INTERNAL_SERVER_ERROR,
+                    500,
+                    "Failed to send verification email");
+        }
 
         User user = new User();
         user.setEmail(request.getEmail());
@@ -61,38 +88,11 @@ public class AuthService {
 
         userRepository.save(user);
 
-        // Không log verification code ra console/log để tránh rò rỉ thông tin nhạy cảm.
-        log.debug("Generated email verification code for {}", request.getEmail());
-
-        // Send verification email asynchronously so register() doesn't block.
-        // If sending fails, do NOT throw.
-        final String targetEmail = request.getEmail();
-        final String code = verificationCode;
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(targetEmail);
-        message.setSubject("[Trackify] Verify your email");
-
-        long ttlMinutes = VERIFICATION_CODE_TTL_SECONDS / 60;
-        message.setText(
-                "Hi,\n\n"
-                        + "Your Trackify verification code is: " + code + "\n"
-                        + "This code expires in " + ttlMinutes + " minutes.\n\n"
-                        + "Enter the code in the app to verify your account.\n\n"
-                        + "— Trackify");
-
-        new Thread(() -> {
-            try {
-                javaMailSender.send(message);
-                log.info("Verification email sent to {}", targetEmail);
-            } catch (Exception ex) {
-                log.warn("Failed to send email verification code to {}", targetEmail, ex);
-            }
-        }, "email-verification-" + targetEmail).start();
-
-        String accessToken = jwtService.generateAccessToken(user.getEmail());
-        String refreshToken = jwtService.generateRefreshToken(user.getEmail());
-        return new AuthTokensResponse(accessToken, refreshToken);
+        // Register requires email verification before the user can use the account.
+        // We intentionally do NOT issue JWT tokens here.
+        // Frontend will redirect to /verify-email and only set cookies after
+        // /verify-email succeeds.
+        return new AuthTokensResponse(null, null);
     }
 
     public AuthTokensResponse login(LoginRequest request) {
@@ -174,7 +174,8 @@ public class AuthService {
                 user.getEmail(),
                 user.getUsername(),
                 user.getFullName(),
-                user.getAvatarUrl());
+                user.getAvatarUrl(),
+                user.isEmailVerified());
     }
 
     private String generateVerificationCode() {

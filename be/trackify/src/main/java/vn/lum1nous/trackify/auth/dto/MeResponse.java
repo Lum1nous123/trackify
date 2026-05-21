@@ -9,18 +9,21 @@ public class MeResponse {
     private final String username;
     private final String fullName;
     private final String avatarUrl;
+    private final boolean emailVerified;
 
     public MeResponse(
             UUID id,
             String email,
             String username,
             String fullName,
-            String avatarUrl) {
+            String avatarUrl,
+            boolean emailVerified) {
         this.id = id;
         this.email = email;
         this.username = username;
         this.fullName = fullName;
         this.avatarUrl = avatarUrl;
+        this.emailVerified = emailVerified;
     }
 
     public UUID getId() {
@@ -41,5 +44,9 @@ public class MeResponse {
 
     public String getAvatarUrl() {
         return avatarUrl;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
     }
 }

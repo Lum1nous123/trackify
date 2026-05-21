@@ -45,6 +45,7 @@ type MeResponse = {
   username: string;
   fullName: string | null;
   avatarUrl?: string | null;
+  emailVerified: boolean;
 };
 
 type DashboardStatsResponse = {
@@ -130,6 +131,7 @@ export default async function DashboardPage() {
   }
 
   const meRes = await axiosServer.get<ApiResponse<MeResponse>>("/api/auth/me");
+
   const userId = meRes.data.data.id;
 
   const dashboardStatsRes = await axiosServer.get<
