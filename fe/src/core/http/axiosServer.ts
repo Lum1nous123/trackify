@@ -31,7 +31,7 @@ const buildCookieHeader = async (): Promise<string> => {
 };
 
 export const axiosServer: AxiosInstance = axios.create({
-  baseURL: BACKEND_BASE_URL,
+  baseURL: getBackendBaseUrl(),
   headers: {
     "Content-Type": "application/json",
   },
