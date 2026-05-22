@@ -21,14 +21,7 @@ public class StartupScrapeLogger implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        String enabled = getEnv("TRACKIFY_SCRAPE_ON_STARTUP", "false");
-        if (!"true".equalsIgnoreCase(enabled)) {
-            log.info("Startup scrape skipped. Set TRACKIFY_SCRAPE_ON_STARTUP=true to enable.");
-            return;
-        }
-
         String url = getEnv("TRACKIFY_SCRAPE_STARTUP_URL", DEFAULT_STARTUP_URL);
-
         try {
             ScrapeResult result = scrapeService.scrapePage(url);
 

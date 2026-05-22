@@ -8,7 +8,7 @@ export const getBackendBaseUrl = (): string => {
     "";
 
   // Fallback for local dev (you can override via TRACKIFY_BACKEND_URL)
-  return fromEnv || "http://localhost:8080";
+  return fromEnv || "http://localhost:8081";
 };
 
 export const BACKEND_BASE_URL = getBackendBaseUrl();

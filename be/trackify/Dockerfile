@@ -1,50 +1,28 @@
-# ================================
 # Stage 1: Build
-# ================================
 FROM maven:3.9.9-eclipse-temurin-21 AS builder
-
 WORKDIR /app
-
-# Copy pom.xml trước để cache dependencies
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
-
-# Copy source và build
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 
-# ================================
 # Stage 2: Runtime
-# ================================
 FROM eclipse-temurin:21-jre-jammy
-
 WORKDIR /app
 
-# Cài Chromium + ChromeDriver cho Selenium
-RUN apt-get update && apt-get install -y \
-  chromium-browser \
-  chromium-chromedriver \
-  fonts-liberation \
-  libappindicator3-1 \
-  libasound2 \
-  libatk-bridge2.0-0 \
-  libnspr4 \
-  libnss3 \
-  libxss1 \
-  xdg-utils \
-  --no-install-recommends \
+RUN apt-get update && apt-get install -y wget gnupg --no-install-recommends \
+  && wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+  && apt-get install -y /tmp/chrome.deb \
+  && rm /tmp/chrome.deb \
   && rm -rf /var/lib/apt/lists/*
 
-# WebDriverManager sẽ tìm Chrome tại đây
-ENV CHROME_BIN=/usr/bin/chromium-browser
-ENV CHROMEDRIVER_PATH=/usr/lib/chromium-browser/chromedriver
+ENV CHROME_BIN=/usr/bin/google-chrome
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
 
-# Copy jar từ stage build
 COPY --from=builder /app/target/*.jar app.jar
-
 EXPOSE 8080
 
 ENTRYPOINT ["java", \
   "-Djava.security.egd=file:/dev/./urandom", \
-  "-Dwebdriver.chrome.driver=/usr/lib/chromium-browser/chromedriver", \
+  "-Dwebdriver.chrome.driver=/usr/bin/chromedriver", \
   "-jar", "app.jar"]

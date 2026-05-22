@@ -183,7 +183,7 @@ export function SidebarNav() {
         <div className='border-t border-[#23252a] px-6 py-4'>
           <div className='flex items-center gap-3'>
             <div
-              className='flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10'
+              className='flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white/5 ring-1 ring-white/10'
               aria-hidden='true'
             >
               {me?.avatarUrl ? (

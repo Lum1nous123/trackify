@@ -88,18 +88,18 @@ public class JwtOncePerRequestAuthenticator extends OncePerRequestFilter {
         String refreshToken = jwtCookieExtractor.getCookieValue(
                 cookieHeader,
                 jwtProperties.getRefreshCookieName());
-        log.info("Access token present: {}", accessToken != null);
-        log.info("Refresh token present: {}", refreshToken != null);
+        // log.info("Access token present: {}", accessToken != null);
+        // log.info("Refresh token present: {}", refreshToken != null);
 
-        log.info("accessToken: {}", accessToken);
-        log.info("refreshToken", refreshToken);
+        // log.info("accessToken: {}", accessToken);
+        // log.info("refreshToken", refreshToken);
 
-        log.info("Expected cookie name: '{}'", jwtProperties.getAccessCookieName());
-        log.info("Cookie header: '{}'", cookieHeader);
+        // log.info("Expected cookie name: '{}'", jwtProperties.getAccessCookieName());
+        // log.info("Cookie header: '{}'", cookieHeader);
         // Ưu tiên access token nếu hợp lệ
         if (accessToken != null) {
             boolean valid = jwtService.isAccessTokenValid(accessToken);
-            log.info("Access token valid: {}", valid);
+            // log.info("Access token valid: {}", valid);
             if (jwtService.isAccessTokenValid(accessToken)) {
                 return jwtService.extractEmailFromAccessToken(accessToken);
             }

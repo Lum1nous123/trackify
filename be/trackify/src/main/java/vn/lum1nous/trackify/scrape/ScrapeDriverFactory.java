@@ -9,7 +9,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Component;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,8 @@ public class ScrapeDriverFactory {
     @PostConstruct
     public void initDriverManager() {
         log.info("INIT WEB DRIVER MANAGER");
-        WebDriverManager.chromedriver().setup();
+        log.info("ChromeDriver path: {}", System.getProperty("webdriver.chrome.driver"));
+
     }
 
     public WebDriver createDriver() {
