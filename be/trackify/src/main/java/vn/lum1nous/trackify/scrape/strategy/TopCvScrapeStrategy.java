@@ -23,9 +23,11 @@ import vn.lum1nous.trackify.scrape.ScrapeDriverFactory;
 import vn.lum1nous.trackify.scrape.ScrapeProperties;
 import vn.lum1nous.trackify.scrape.ScrapeResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TopCvScrapeStrategy implements ScrapeStrategy {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -116,12 +118,14 @@ public class TopCvScrapeStrategy implements ScrapeStrategy {
             } catch (TrackifyException ex) {
                 throw ex;
             } catch (TimeoutException | org.openqa.selenium.NoSuchElementException ex) {
+                log.error("Scrape attempt {} failed (timeout/missing elements): {}", attempt, ex.getMessage(), ex); // thêm
                 lastException = new TrackifyException(
                         ErrorCode.BAD_REQUEST,
                         400,
                         "Failed to scrape page (timeout / missing elements)",
                         Map.of("cause", ex.getMessage(), "attempt", attempt));
             } catch (Exception ex) {
+                log.error("Scrape attempt {} failed (unexpected): {}", attempt, ex.getMessage(), ex); // thêm
                 lastException = new TrackifyException(
                         ErrorCode.BAD_REQUEST,
                         400,
