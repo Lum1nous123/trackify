@@ -10,10 +10,17 @@ RUN mvn clean package -DskipTests -B
 FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y wget gnupg --no-install-recommends \
+RUN apt-get update && apt-get install -y wget gnupg unzip --no-install-recommends \
   && wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
   && apt-get install -y /tmp/chrome.deb \
   && rm /tmp/chrome.deb \
+  && CHROME_MAJOR=$(google-chrome --version | grep -oP '\d+' | head -1) \
+  && DRIVER_VERSION=$(wget -qO- "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_MAJOR}") \
+  && wget -q -O /tmp/chromedriver.zip "https://storage.googleapis.com/chrome-for-testing-public/${DRIVER_VERSION}/linux64/chromedriver-linux64.zip" \
+  && unzip /tmp/chromedriver.zip -d /tmp/ \
+  && mv /tmp/chromedriver-linux64/chromedriver /usr/bin/chromedriver \
+  && chmod +x /usr/bin/chromedriver \
+  && rm -rf /tmp/chromedriver* \
   && rm -rf /var/lib/apt/lists/*
 
 ENV CHROME_BIN=/usr/bin/google-chrome
