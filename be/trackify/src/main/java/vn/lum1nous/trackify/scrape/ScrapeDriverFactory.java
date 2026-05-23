@@ -2,8 +2,10 @@ package vn.lum1nous.trackify.scrape;
 
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -51,6 +53,9 @@ public class ScrapeDriverFactory {
                 "--no-first-run",
                 "--safebrowsing-disable-auto-update");
 
+        options.setExperimentalOption("excludeSwitches", List.of("enable-automation"));
+        options.setExperimentalOption("useAutomationExtension", false);
+
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.managed_default_content_settings.images", 2);
         prefs.put("profile.managed_default_content_settings.stylesheets", 2);
@@ -63,6 +68,9 @@ public class ScrapeDriverFactory {
         }
 
         WebDriver driver = new ChromeDriver(options);
+
+        ((JavascriptExecutor) driver).executeScript(
+                "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
 
         Duration pageLoadTimeout = Duration.ofSeconds(Math.max(1, scrapeProperties.getPageLoadTimeoutSeconds()));
         driver.manage().timeouts().pageLoadTimeout(pageLoadTimeout);
